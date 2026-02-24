@@ -255,14 +255,14 @@ a {
 
 .gallery-grid {
     display: grid;
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 4px;
+    /* Instagram-like minimal gap */
 }
 
 @media (min-width: 768px) {
     .gallery-grid {
-        grid-template-columns: repeat(3, 1fr);
-        gap: 2rem;
+        gap: 1rem;
     }
 }
 
@@ -271,13 +271,6 @@ a {
     overflow: hidden;
     background-color: var(--color-gray-200);
     aspect-ratio: 4/5;
-}
-
-/* Masonry Offset for Center Item */
-@media (min-width: 768px) {
-    .gallery-item:nth-child(2) {
-        margin-top: 3rem;
-    }
 }
 
 .gallery-img {
@@ -363,6 +356,7 @@ a {
     0% {
         background-position: 200% 0;
     }
+
     100% {
         background-position: -200% 0;
     }

@@ -18,16 +18,27 @@ def main():
     
     print(f"Obteniendo posts de {PROFILE}...")
     try:
+        import requests
         profile = instaloader.Profile.from_username(L.context, PROFILE)
         
         posts_data = []
-        # Obtener los ultimos 3 posts
+        img_dir = os.path.join(os.path.dirname(__file__), "data", "ig_images")
+        os.makedirs(img_dir, exist_ok=True)
+        
+        # Obtener los ultimos 9 posts
         for post in profile.get_posts():
+            # Descargar la imagen
+            img_path = os.path.join(img_dir, f"{post.shortcode}.jpg")
+            if not os.path.exists(img_path):
+                img_data = requests.get(post.url).content
+                with open(img_path, 'wb') as handler:
+                    handler.write(img_data)
+                    
             posts_data.append({
                 "permalink": f"https://www.instagram.com/p/{post.shortcode}/",
-                "media_url": post.url
+                "media_url": f"./data/ig_images/{post.shortcode}.jpg"
             })
-            if len(posts_data) >= 3:
+            if len(posts_data) >= 9:
                 break
                 
         # Guardar en data/instagram.json

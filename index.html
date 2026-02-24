@@ -81,6 +81,24 @@
                 <div class="gallery-item loading">
                     <div class="gallery-img loading-placeholder"></div>
                 </div>
+                <div class="gallery-item loading">
+                    <div class="gallery-img loading-placeholder"></div>
+                </div>
+                <div class="gallery-item loading">
+                    <div class="gallery-img loading-placeholder"></div>
+                </div>
+                <div class="gallery-item loading">
+                    <div class="gallery-img loading-placeholder"></div>
+                </div>
+                <div class="gallery-item loading">
+                    <div class="gallery-img loading-placeholder"></div>
+                </div>
+                <div class="gallery-item loading">
+                    <div class="gallery-img loading-placeholder"></div>
+                </div>
+                <div class="gallery-item loading">
+                    <div class="gallery-img loading-placeholder"></div>
+                </div>
             </div>
         </div>
     </section>
@@ -131,8 +149,8 @@
                     if (data && data.length > 0) {
                         feedContainer.innerHTML = ''; // Limpiar placeholders
 
-                        // Solo tomamos los primeros 3 usando slice por seguridad
-                        data.slice(0, 3).forEach(post => {
+                        // Mostrar 9 posts max (grid de 3x3)
+                        data.slice(0, 9).forEach(post => {
                             const postHtml = `
                                 <div class="gallery-item">
                                     <a href="${post.permalink}" target="_blank" rel="noopener noreferrer">

@@ -41,7 +41,21 @@ MIKO-STUDIOS/
 
 The Instagram feed is synced using `sync_instagram.py`, which caches posts locally to avoid exposing API tokens in the frontend.
 
+### Automatic (GitHub Actions)
+
+A GitHub Actions workflow runs daily at **8:00 AM UTC** to automatically sync the latest 9 Instagram posts. The workflow:
+
+1. Checks out the repository
+2. Installs Python dependencies from `requirements.txt`
+3. Runs `sync_instagram.py` to fetch new posts and images
+4. Commits and pushes any changes back to the `main` branch
+
+You can also trigger it manually from the **Actions** tab in GitHub.
+
+### Manual
+
 ```bash
+pip install -r requirements.txt
 python3 sync_instagram.py
 ```
 

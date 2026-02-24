@@ -6,12 +6,12 @@ Descarga los últimos 9 posts del perfil de Instagram de Miko Studios
 y los cachea localmente (imágenes + JSON) para servir el feed sin
 exponer tokens en el frontend.
 
-Uso:
+Uso local:
     python3 sync_instagram.py
 
-Entorno CI/CD (GitHub Actions):
-    Se ejecuta automáticamente cada día. Instaloader accede al perfil
-    público sin necesidad de login para perfiles públicos.
+Uso en CI/CD (GitHub Actions):
+    Requiere el secreto INSTAGRAM_SESSION_ID con el valor de la cookie
+    "sessionid" de una sesión activa de Instagram.
 """
 
 import os
@@ -19,6 +19,7 @@ import sys
 import json
 import time
 import logging
+import http.cookiejar
 
 # Configurar logging
 logging.basicConfig(
@@ -61,10 +62,7 @@ def download_image(url, filepath):
         except requests.RequestException as e:
             logger.warning(
                 "  Intento %d/%d fallido para %s: %s",
-                attempt,
-                MAX_RETRIES,
-                os.path.basename(filepath),
-                e,
+                attempt, MAX_RETRIES, os.path.basename(filepath), e,
             )
             if attempt < MAX_RETRIES:
                 time.sleep(RETRY_DELAY)
@@ -82,6 +80,37 @@ def cleanup_old_images(current_shortcodes):
             filepath = os.path.join(IMG_DIR, filename)
             os.remove(filepath)
             logger.info("  Imagen antigua eliminada: %s", filename)
+
+
+def login_with_session(L, session_id):
+    """
+    Inicia sesión en Instagram usando un session ID de cookie.
+    Esto evita el error 429 desde IPs de servidores (GitHub Actions).
+    """
+    import requests as req
+
+    logger.info("Iniciando sesión con session ID proporcionado...")
+
+    # Configurar la cookie de sesión directamente en instaloader
+    L.context._session.cookies.set(
+        "sessionid",
+        session_id,
+        domain=".instagram.com",
+        path="/",
+    )
+
+    # Verificar que la sesión es válida
+    try:
+        username = L.test_login()
+        if username:
+            logger.info("Sesión válida. Conectado como: %s", username)
+            return True
+        else:
+            logger.warning("La sesión no parece válida, intentando sin login...")
+            return False
+    except Exception as e:
+        logger.warning("Error verificando sesión: %s. Intentando sin login...", e)
+        return False
 
 
 def sync_instagram():
@@ -111,6 +140,14 @@ def sync_instagram():
         quiet=True,
     )
 
+    # Intentar login con session ID si está disponible
+    session_id = os.environ.get("INSTAGRAM_SESSION_ID", "").strip()
+    if session_id:
+        login_with_session(L, session_id)
+    else:
+        logger.info("No se encontró INSTAGRAM_SESSION_ID. Ejecutando sin login.")
+        logger.info("(En GitHub Actions, configura el secreto para evitar errores 429)")
+
     try:
         profile = instaloader.Profile.from_username(L.context, PROFILE)
         logger.info("Perfil encontrado: %s (%s posts)", profile.full_name, profile.mediacount)
@@ -119,6 +156,7 @@ def sync_instagram():
         sys.exit(1)
     except instaloader.exceptions.ConnectionException as e:
         logger.error("Error de conexión con Instagram: %s", e)
+        logger.error("Si estás en CI/CD, asegúrate de configurar el secreto INSTAGRAM_SESSION_ID.")
         sys.exit(1)
 
     posts_data = []
@@ -139,16 +177,17 @@ def sync_instagram():
         else:
             logger.info("  Imagen ya cacheada: %s.jpg", shortcode)
 
-        posts_data.append(
-            {
-                "permalink": f"https://www.instagram.com/p/{shortcode}/",
-                "media_url": f"./data/ig_images/{shortcode}.jpg",
-            }
-        )
+        posts_data.append({
+            "permalink": f"https://www.instagram.com/p/{shortcode}/",
+            "media_url": f"./data/ig_images/{shortcode}.jpg",
+        })
         shortcodes.append(shortcode)
 
         if len(posts_data) >= MAX_POSTS:
             break
+
+        # Pequeña pausa entre posts para evitar rate limiting
+        time.sleep(1)
 
     if not posts_data:
         logger.error("No se obtuvieron posts. Abortando sin modificar el JSON existente.")
@@ -163,8 +202,7 @@ def sync_instagram():
 
     logger.info(
         "Sincronización completada: %d posts guardados en %s",
-        len(posts_data),
-        JSON_FILE,
+        len(posts_data), JSON_FILE,
     )
 
     return 0

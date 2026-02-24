@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miko Studios | Creative Agency</title>
+    <meta name="description" content="Full service creative agency + studio in Miami.">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://mikostudios.co/">
+    <meta property="og:title" content="Miko Studios | Creative Agency">
+    <meta property="og:description" content="Full service creative agency + studio in Miami.">
+    <meta property="og:image" content="https://mikostudios.co/img/og-image.jpg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://mikostudios.co/">
+    <meta property="twitter:title" content="Miko Studios | Creative Agency">
+    <meta property="twitter:description" content="Full service creative agency + studio in Miami.">
+    <meta property="twitter:image" content="https://mikostudios.co/img/og-image.jpg">
+
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="./favicon.png">
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Montserrat:wght@300;400;500&family=Space+Mono:wght@400&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS (Pure/Native) -->
+    <link href="./css/style.css" rel="stylesheet">
+</head>
+
+<body>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+
+            <div class="hero-logo-container">
+                <img src="./miko-logo.png" alt="Miko Studios" class="hero-logo">
+            </div>
+
+            <p class="hero-description">
+                FULL SERVICE CREATIVE AGENCY <br>& STUDIO SPACE IN MIAMI
+            </p>
+
+            <div class="btn-wrapper">
+                <a href="https://mikostudios.as.me/" class="btn">
+                    <span>Book the Studio</span>
+                    <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="square" stroke-linejoin="miter" stroke-width="1.5"
+                            d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+                    </svg>
+                </a>
+            </div>
+
+            <p class="contact-text">
+                For creative inquiries contact <a href="mailto:miko@mikostudios.co"
+                    class="contact-link">miko@mikostudios.co</a>
+            </p>
+        </div>
+    </section>
+
+    <!-- Instagram Feed Section -->
+    <section class="gallery">
+        <div class="container">
+            <!-- Contenedor del Feed de Instagram -->
+            <div id="custom-instafeed" class="gallery-grid">
+                <!-- Placeholders de Carga -->
+                <div class="gallery-item loading">
+                    <div class="gallery-img loading-placeholder"></div>
+                </div>
+                <div class="gallery-item loading">
+                    <div class="gallery-img loading-placeholder"></div>
+                </div>
+                <div class="gallery-item loading">
+                    <div class="gallery-img loading-placeholder"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="copyright">
+            © 2025 MIKO STUDIOS. ALL RIGHTS RESERVED.
+        </div>
+        <div class="social-links">
+            <a href="http://instagram.com/mikostudios.co/" class="social-icon" aria-label="Instagram">
+                <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="-2 -2 28 28">
+                    <rect x="2" y="2" width="20" height="20" rx="5" ry="5" stroke-width="1.75" stroke-linecap="round"
+                        stroke-linejoin="round"></rect>
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" stroke-width="1.75" stroke-linecap="round"
+                        stroke-linejoin="round"></path>
+                    <line x1="17.5" y1="6.5" x2="17.51" y2="6.5" stroke-width="1.75" stroke-linecap="round"
+                        stroke-linejoin="round"></line>
+                </svg>
+            </a>
+            <a href="mailto:miko@mikostudios.co" class="social-icon" aria-label="Email">
+                <svg class="icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"
+                        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                    <polyline points="22,6 12,13 2,6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    </polyline>
+                </svg>
+            </a>
+        </div>
+    </footer>
+
+    <!-- Instagram JSON Script (Sin Tokens en el Frontend) -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const feedContainer = document.getElementById('custom-instafeed');
+
+            const fetchInstagramPosts = async () => {
+                try {
+                    // Lee el archivo local generado por nuestro script
+                    const response = await fetch('./data/instagram.json');
+
+                    if (!response.ok) {
+                        throw new Error('No se pudo cargar el feed local');
+                    }
+
+                    const data = await response.json();
+
+                    if (data && data.length > 0) {
+                        feedContainer.innerHTML = ''; // Limpiar placeholders
+
+                        // Solo tomamos los primeros 3 usando slice por seguridad
+                        data.slice(0, 3).forEach(post => {
+                            const postHtml = `
+                                <div class="gallery-item">
+                                    <a href="${post.permalink}" target="_blank" rel="noopener noreferrer">
+                                        <img src="${post.media_url}" alt="Instagram Post" class="gallery-img">
+                                    </a>
+                                </div>
+                            `;
+                            feedContainer.insertAdjacentHTML('beforeend', postHtml);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error cargando el feed de Instagram local:', error);
+                    feedContainer.innerHTML = '<p style="text-align:center; padding: 2rem; font-family: var(--font-mono); font-size: 0.8rem; color: var(--color-olive);">Feed de Instagram temporalmente no disponible.</p>';
+                }
+            };
+
+            fetchInstagramPosts();
+        });
+    </script>
+</body>
+
+</html>

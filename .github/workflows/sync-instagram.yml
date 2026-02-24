@@ -1,0 +1,52 @@
+name: Sync Instagram Feed
+
+# Se ejecuta automáticamente cada día a las 8:00 AM UTC (4:00 AM EST)
+# También se puede ejecutar manualmente desde la pestaña Actions
+on:
+  schedule:
+    - cron: '0 8 * * *'
+  workflow_dispatch:
+
+# Permisos necesarios para hacer commit y push
+permissions:
+  contents: write
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      # 1. Checkout del repositorio
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # 2. Configurar Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      # 3. Instalar dependencias
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 4. Ejecutar el script de sincronización
+      - name: Sync Instagram feed
+        run: python3 sync_instagram.py
+
+      # 5. Commit y push de los cambios (si los hay)
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/ 
+          # Solo hacer commit si hay cambios reales
+          if git diff --staged --quiet; then
+            echo "No hay cambios nuevos en el feed de Instagram."
+          else
+            git commit -m "chore: sync Instagram feed $(date -u +'%Y-%m-%d %H:%M UTC')"
+            git push
+            echo "Feed de Instagram actualizado y publicado."
+          fi

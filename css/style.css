@@ -23,19 +23,13 @@
 
     /* Spacing */
     --spacing-sm: 0.5rem;
-    /* 8px */
     --spacing-md: 1rem;
-    /* 16px */
     --spacing-lg: 2rem;
-    /* 32px */
     --spacing-xl: 4rem;
-    /* 64px */
     --spacing-2xl: 8rem;
-    /* 128px */
 
     /* Layout */
     --max-width: 1280px;
-    /* max-w-7xl approx */
     --container-padding: 1.5rem;
 }
 
@@ -48,12 +42,17 @@
     padding: 0;
 }
 
+html {
+    scroll-behavior: smooth;
+}
+
 body {
     background-color: var(--color-cream);
     color: var(--color-charcoal);
     font-family: var(--font-sans);
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
     overflow-x: hidden;
 }
 
@@ -73,6 +72,26 @@ a {
     color: inherit;
 }
 
+/* Accessibility */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border-width: 0;
+}
+
+/* Focus styles for keyboard navigation */
+a:focus-visible,
+button:focus-visible {
+    outline: 2px solid var(--color-olive);
+    outline-offset: 2px;
+}
+
 /* Typography Utilities */
 .font-serif {
     font-family: var(--font-serif);
@@ -84,18 +103,6 @@ a {
 
 .font-mono {
     font-family: var(--font-mono);
-}
-
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
-    white-space: nowrap;
-    border-width: 0;
 }
 
 /* Navigation */
@@ -137,7 +144,6 @@ a {
     align-items: center;
     gap: 1.5rem;
     max-width: 56rem;
-    /* max-w-4xl */
     margin: 0 auto;
 
     /* Animation */
@@ -175,11 +181,9 @@ a {
 .hero-description {
     font-family: var(--font-mono);
     font-size: 0.875rem;
-    /* text-sm */
     color: var(--color-olive);
     line-height: 1.2;
     max-width: 32rem;
-    /* max-w-lg */
     margin-top: 1rem;
     letter-spacing: 0;
 }
@@ -207,6 +211,8 @@ a {
     font-size: 1rem;
     letter-spacing: 0;
     transition: background-color 0.5s ease-out;
+    border: none;
+    cursor: pointer;
 }
 
 .btn:hover {
@@ -237,6 +243,10 @@ a {
     transition: color 0.3s;
 }
 
+.contact-link:hover {
+    color: var(--color-terracotta);
+}
+
 /* Gallery Section */
 .gallery {
     padding: 0 1rem 5rem 1rem;
@@ -257,7 +267,6 @@ a {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    /* Instagram-like minimal gap */
     width: 100%;
 }
 
@@ -323,7 +332,6 @@ a {
 .icon-svg {
     width: 1.25rem;
     height: 1.25rem;
-    /* fill or stroke is handled by SVG attributes */
     display: block;
 }
 
@@ -354,5 +362,16 @@ a {
 
     100% {
         background-position: -200% 0;
+    }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
     }
 }

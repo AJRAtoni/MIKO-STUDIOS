@@ -164,7 +164,8 @@
 
             const fetchInstagramPosts = async () => {
                 try {
-                    const response = await fetch('./data/instagram.json');
+                    const timestamp = new Date().getTime();
+                    const response = await fetch('./data/instagram.json?t=' + timestamp);
 
                     if (!response.ok) {
                         throw new Error('Could not load local feed');

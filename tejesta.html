@@ -1,0 +1,482 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TEJESTA 2026 Meeting Summary</title>
+  <style>
+    @font-face {
+      font-family: "ABCDiatypeMono";
+      src: url("fonts/ABCDiatypeMonoVariable-Trial.ttf") format("truetype");
+      font-weight: 100 900;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Cormorant Garamond";
+      src: url("fonts/CormorantGaramond-300.ttf") format("truetype");
+      font-weight: 300;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Cormorant Garamond";
+      src: url("fonts/CormorantGaramond-400.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Cormorant Garamond";
+      src: url("fonts/CormorantGaramond-600.ttf") format("truetype");
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "Cormorant Garamond";
+      src: url("fonts/CormorantGaramond-Italic-400.ttf") format("truetype");
+      font-weight: 400;
+      font-style: italic;
+      font-display: swap;
+    }
+
+    :root {
+      --cream: #F2F0E6;
+      --charcoal: #2C2C2C;
+      --olive: rgb(164, 157, 89);
+      --olive-soft: rgba(164, 157, 89, 0.16);
+      --terracotta: #AF8A69;
+      --paper: #FCFBF6;
+      --rule: rgba(44, 44, 44, 0.16);
+      --serif: "Cormorant Garamond", Georgia, serif;
+      --mono: "ABCDiatypeMono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    }
+
+    @page {
+      size: A4;
+      margin: 16mm 15mm 18mm;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--cream);
+      color: var(--charcoal);
+      font-family: var(--mono);
+      font-size: 10px;
+    }
+
+    body {
+      margin: 0;
+      background: var(--cream);
+      color: var(--charcoal);
+      -webkit-font-smoothing: antialiased;
+      line-height: 1.46;
+    }
+
+    .page {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 30px 0 42px;
+    }
+
+    .brand-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 32px;
+      padding-bottom: 28px;
+      margin-bottom: 26px;
+      border-bottom: 1px solid var(--charcoal);
+    }
+
+    .brand-logo {
+      width: 118px;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .brand-meta {
+      max-width: 360px;
+      color: var(--olive);
+      font-family: var(--mono);
+      font-size: 10px;
+      line-height: 1.45;
+      text-align: right;
+      text-transform: uppercase;
+    }
+
+    main {
+      background: var(--paper);
+      border: 1px solid var(--rule);
+      padding: 34px 40px 38px;
+    }
+
+    h1,
+    h2,
+    h3 {
+      margin: 0;
+      color: var(--charcoal);
+      font-family: var(--serif);
+      font-weight: 400;
+      letter-spacing: 0;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin-bottom: 16px;
+      font-size: 50px;
+      line-height: 0.92;
+      font-weight: 300;
+    }
+
+    h2 {
+      margin-top: 32px;
+      padding-top: 24px;
+      border-top: 1px solid var(--rule);
+      font-size: 27px;
+      line-height: 1.05;
+      page-break-after: avoid;
+    }
+
+    h3 {
+      margin-top: 20px;
+      color: var(--olive);
+      font-family: var(--mono);
+      font-size: 11px;
+      font-weight: 600;
+      line-height: 1.3;
+      text-transform: uppercase;
+    }
+
+    p,
+    li {
+      font-family: var(--mono);
+      font-size: 10.5px;
+      line-height: 1.54;
+    }
+
+    p {
+      margin: 9px 0;
+    }
+
+    a {
+      color: var(--terracotta);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(175, 138, 105, 0.35);
+    }
+
+    ul,
+    ol {
+      margin: 10px 0 14px;
+      padding-left: 20px;
+    }
+
+    li {
+      margin: 4px 0;
+    }
+
+    code {
+      padding: 1px 4px;
+      background: var(--olive-soft);
+      border-radius: 0;
+      font-family: var(--mono);
+      font-size: 0.94em;
+    }
+
+    hr {
+      display: none;
+    }
+
+    input[type="checkbox"] {
+      width: 10px;
+      height: 10px;
+      margin: 0 6px 0 -18px;
+      accent-color: var(--olive);
+      transform: translateY(1px);
+    }
+
+    blockquote {
+      margin: 18px 0;
+      padding: 12px 18px;
+      border-left: 3px solid var(--olive);
+      background: var(--olive-soft);
+    }
+
+    .doc-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 24px;
+      margin-top: 18px;
+      color: var(--olive);
+      font-family: var(--mono);
+      font-size: 9px;
+      text-transform: uppercase;
+    }
+
+    @media print {
+      body {
+        print-color-adjust: exact;
+        -webkit-print-color-adjust: exact;
+      }
+      .page {
+        padding: 0;
+      }
+      main {
+        border: 0;
+        padding: 0;
+        background: transparent;
+      }
+      .brand-header {
+        margin-bottom: 18px;
+      }
+      h2 {
+        break-after: avoid;
+      }
+      li,
+      p {
+        orphans: 3;
+        widows: 3;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="brand-header">
+      <img class="brand-logo" src="images/miko-logo.png" alt="MIKO Studios">
+      <div class="brand-meta">
+        TEJESTA 2026<br>
+        Shopify Development Review<br>
+        Prepared by MIKO Studios
+      </div>
+    </header>
+    <main>
+      <h1>TEJESTA 2026 - Meeting Summary</h1>
+<p>Date: 2026-05-06<br>Project: Shopify remodel, catalog structure, and new theme</p>
+<hr>
+<h2>1. Project Goal</h2>
+<p>We are preparing a new version of the TEJESTA Shopify store before making changes to the live site.</p>
+<p>The main goal is to organize the catalog so the store becomes clearer, easier to maintain, and closer to a premium eyewear experience inspired by Matsuda:</p>
+<ul>
+<li>One product = one eyewear model/style.</li>
+<li>Color and lens variations are managed as variants inside the product.</li>
+<li>The variant option is called <code>Colorway</code>.</li>
+<li>Collection pages stop showing many duplicated products by color.</li>
+<li>Each product page concentrates images, description, variants, SEO, and commercial data in one place.</li>
+</ul>
+<hr>
+<h2>2. Current Status</h2>
+<h3>Development Store</h3>
+<p>We have created a development store where we are testing the new structure:</p>
+<p><a href="https://tejesta2026.myshopify.com/">https://tejesta2026.myshopify.com/</a></p>
+<p>The site can be visited, but it is password protected:</p>
+<p><code>tejesta</code></p>
+<p>This environment lets us review products, theme behavior, and the shopping experience without affecting the live store.</p>
+<h3>Products</h3>
+<p>We have already imported the unified products into the development store.</p>
+<p>Catalog change summary:</p>
+<ul>
+<li>Before: 362 original products/handles.</li>
+<li>Now: 64 products grouped by model/style.</li>
+<li>Variants created: 362.</li>
+<li>Product groups merged: 51.</li>
+<li>Redirects prepared: 362.</li>
+<li>301 redirects needed because the URL changes: 351.</li>
+</ul>
+<p>This does not mean the catalog is production-ready. The structure is now available for review, but TEJESTA still needs to validate groupings, names, images, SKUs, inventory, and content.</p>
+<h3>New Theme</h3>
+<p>We have also created the new theme in GitHub to speed up development and keep better control over changes:</p>
+<p><a href="https://github.com/AJRAtoni/tejesta">https://github.com/AJRAtoni/tejesta</a></p>
+<p>This lets us work in a more organized way, test changes in development, and only move validated updates to the live site.</p>
+<h3>Visual Design</h3>
+<p>We have not worked on the final visual design yet: colors, typography, graphic style, visual polish, or the complete aesthetic direction.</p>
+<p>Right now, we are focused on the Shopify functional foundation because that is the priority: catalog structure, variants, images, filters, navigation, and overall behavior.</p>
+<p>The idea is to first approve a solid foundation and then apply the visual design on top of that structure.</p>
+<hr>
+<h2>3. What Is Already Done</h2>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Development store created.</li>
+<li><input checked="" disabled="" type="checkbox"> Unified products imported into development.</li>
+<li><input checked="" disabled="" type="checkbox"> New catalog structure prepared: product = model, variant = colorway.</li>
+<li><input checked="" disabled="" type="checkbox"> Variant option defined as <code>Colorway</code>.</li>
+<li><input checked="" disabled="" type="checkbox"> RX and Sunglasses kept separate for now.</li>
+<li><input checked="" disabled="" type="checkbox"> Redirect map prepared for old URLs.</li>
+<li><input checked="" disabled="" type="checkbox"> New theme created in GitHub.</li>
+<li><input checked="" disabled="" type="checkbox"> Initial design and UX notes prepared using Matsuda as reference.</li>
+<li><input checked="" disabled="" type="checkbox"> Technical base prepared for collection pages, product pages, and variant selectors.</li>
+</ul>
+<hr>
+<h2>4. What Still Needs Validation</h2>
+<ul>
+<li><input disabled="" type="checkbox"> Review whether the 64 grouped products are correct.</li>
+<li><input disabled="" type="checkbox"> Confirm model names and colorway names.</li>
+<li><input disabled="" type="checkbox"> Confirm which non-eyewear products should remain in the store.</li>
+<li><input disabled="" type="checkbox"> Review prices, inventory, and product status.</li>
+<li><input disabled="" type="checkbox"> Validate images for each product and colorway.</li>
+<li><input checked="" disabled="" type="checkbox"> Define how the variant image gallery will work.</li>
+<li><input disabled="" type="checkbox"> Review how the colorway selector should work when a product has many variants.</li>
+<li><input disabled="" type="checkbox"> Decide how sold-out variants should appear: hidden or visible with a sold-out visual state.</li>
+<li><input disabled="" type="checkbox"> Decide whether the PDP title should show only the model or model + selected colorway.</li>
+<li><input disabled="" type="checkbox"> Define how editorial/hero blocks below the product gallery will be managed.</li>
+<li><input disabled="" type="checkbox"> Define filters: which filters we use, what internal fields/tags feed them, and how they display.</li>
+<li><input disabled="" type="checkbox"> Review collections and navigation.</li>
+<li><input disabled="" type="checkbox"> Work on final visual design: colors, typography, and graphic style.</li>
+<li><input disabled="" type="checkbox"> Complete QA before touching production.</li>
+</ul>
+<hr>
+<h2>5. How Colorway Images Will Work</h2>
+<p>When old separate products are merged into a single new product, we need to avoid mixing images from different colorways in the same gallery.</p>
+<p>The defined solution is that each <code>Colorway</code> variant will have its own image gallery through a custom Shopify field.</p>
+<p>Instead of creating rigid fields such as <code>Front</code>, <code>Side</code>, and <code>Diagonal</code>, we will use a flexible gallery field per variant. This means each colorway can have three images when that is enough, but it can also have more images if a product needs them.</p>
+<h3>Behavior</h3>
+<ul>
+<li>Each product will continue using <code>Colorway</code> variants.</li>
+<li>Each variant will have its own list of images.</li>
+<li>The theme will show the image gallery that belongs to the selected colorway.</li>
+<li>The team will be able to add more photos from the backend when needed.</li>
+</ul>
+<h3>Recommended Image Order</h3>
+<p>To keep consistency, we recommend this order:</p>
+<ol>
+<li>Front</li>
+<li>Side</li>
+<li>Diagonal</li>
+<li>Detail or extra images, when needed</li>
+</ol>
+<h3>Benefits</h3>
+<ul>
+<li>Each colorway controls its own images.</li>
+<li>The gallery does not depend on filenames or ALT text.</li>
+<li>The system is cleaner and more scalable long term.</li>
+<li>Products are not limited to only three photos.</li>
+<li>It supports a clearer and more premium visual experience.</li>
+</ul>
+<h3>Consideration</h3>
+<p>This solution requires theme customization so the theme can read the images assigned to each variant, but it is the cleanest option for the new catalog structure.</p>
+<hr>
+<h2>6. Visual Point To Review: Selector With Many Variants</h2>
+<p>On the product page, the colorway selector works well when there are only a few variants. For example, products with four colorways look clean and easy to use.</p>
+<p>But in models with many variants, such as <code>Araki</code>, the thumbnails do not fit well in the available space and the selector looks too compressed.</p>
+<p>We should review this with TEJESTA before closing the product page design.</p>
+<p>Options we could consider:</p>
+<ul>
+<li>Keep small thumbnails but add horizontal scroll.</li>
+<li>Show fewer visible thumbnails and open a full selector on click.</li>
+<li>Use a multi-row layout.</li>
+<li>Switch to a list/dropdown selector for models with many variants.</li>
+<li>Use larger thumbnails on desktop and a more compact solution on mobile.</li>
+</ul>
+<p>The important point is deciding which experience TEJESTA prefers when a model has many colorways.</p>
+<hr>
+<h2>7. Pending Point: Sold-Out Variants</h2>
+<p>We need to decide what happens when a variant/colorway is sold out.</p>
+<p>Options:</p>
+<ul>
+<li>Hide it from the website while it is out of stock.</li>
+<li>Keep it visible as a thumbnail, but with a slight fadeout or clear sold-out state.</li>
+</ul>
+<p>Keeping it visible helps show the full colorway range and can generate interest, but it can also frustrate users if they try to select something they cannot buy.</p>
+<p>Hiding it simplifies the shopping experience, but it can make a model look like it has fewer options than it actually does.</p>
+<p>Decision needed from TEJESTA: hide sold-out colorways, or show them with a clear visual state.</p>
+<hr>
+<h2>8. Pending Point: Product Title On PDP</h2>
+<p>Right now, the product page shows the product/model name.</p>
+<p>We could make the title also show the selected colorway when a variant is selected.</p>
+<p>Example:</p>
+<ul>
+<li>Current: <code>Araki</code></li>
+<li>Possible: <code>Araki - Piano</code></li>
+<li>Possible: <code>Araki - Havana</code></li>
+</ul>
+<p>This can help the user understand which colorway they are viewing, especially if the gallery and images change when a variant is selected.</p>
+<p>Decision needed from TEJESTA: keep a cleaner title with only the model, or show model + colorway on the PDP.</p>
+<hr>
+<h2>9. Editorial Blocks On PDP</h2>
+<p>On references like Matsuda, after the product gallery there are editorial hero blocks with images, text, and links.</p>
+<p>These blocks should not depend on the variant/colorway. The cleanest approach is to treat them as product, family, or collection content, not as variant-specific content.</p>
+<p>Recommendation:</p>
+<ul>
+<li>Keep one common PDP base for eyewear.</li>
+<li>Add reusable editorial blocks below the gallery.</li>
+<li>Manage those blocks with metafields or metaobjects, so they can be shared across products in the same family.</li>
+<li>Avoid creating a different template for every single model, except for special cases.</li>
+</ul>
+<p>When separate templates could make sense:</p>
+<ul>
+<li>Sunglasses vs Optical, if the structure changes.</li>
+<li>Accessories or apparel.</li>
+<li>Special collaborations.</li>
+<li>Landing-style products with very specific storytelling.</li>
+</ul>
+<p>For normal eyewear models, it is better to have one flexible main template and control editorial content from Shopify.</p>
+<hr>
+<h2>10. Pending Point: Collection Filters</h2>
+<p>We still need to define the filtering system.</p>
+<p>It is not enough to decide what filters the shopper will see. We also need to decide what internal information will feed those filters:</p>
+<ul>
+<li>Tags.</li>
+<li>Product type.</li>
+<li>Metafields.</li>
+<li>Collections.</li>
+<li>Specific internal product fields.</li>
+</ul>
+<p>Possible filters to review:</p>
+<ul>
+<li>Sunglasses / Optical.</li>
+<li>Shape.</li>
+<li>Frame material.</li>
+<li>Frame color.</li>
+<li>Lens color.</li>
+<li>Fit.</li>
+<li>Availability.</li>
+<li>Price.</li>
+<li>Collection.</li>
+</ul>
+<p>We also need to decide how filters will be displayed visually: sidebar filters, top filters, buttons, dropdowns, or a combination depending on desktop/mobile.</p>
+<p>This remains open before closing the collection design.</p>
+<hr>
+<h2>11. Questions To Close In The Meeting</h2>
+<ol>
+<li>Do we validate product = model and variant = <code>Colorway</code>?</li>
+<li>What colorway names does TEJESTA want to use?</li>
+<li>How should many colorways be displayed on one product page?</li>
+<li>When a variant is sold out, should we hide it or show it with a fadeout/sold-out state?</li>
+<li>Should the PDP title show only the model or model + selected colorway?</li>
+<li>What editorial blocks should appear below the product gallery?</li>
+<li>Which current products should be kept, archived, or discontinued?</li>
+<li>Which filters are truly important for the shopper?</li>
+<li>What internal fields should feed those filters: tags, metafields, product type, or collections?</li>
+</ol>
+<hr>
+<h2>12. Next Steps</h2>
+<ul>
+<li>Review the development site with TEJESTA.</li>
+<li>Correct groupings, colorways, SKUs, and images.</li>
+<li>Implement the variant gallery in the theme.</li>
+<li>Adjust the colorway selector for products with many variants.</li>
+<li>Define sold-out variant behavior.</li>
+<li>Define title behavior on the PDP when the colorway changes.</li>
+<li>Define reusable PDP editorial blocks.</li>
+<li>Define filters, internal fields, and visual presentation.</li>
+<li>Continue developing the theme in GitHub.</li>
+<li>Work on final visual design once the functional foundation is approved.</li>
+<li>Complete QA in staging.</li>
+<li>Prepare redirects and migration plan.</li>
+<li>Only after that, apply changes to the live site.</li>
+</ul>
+<hr>
+<h2>Important Note</h2>
+<p>The development site is a working environment. It is useful for reviewing and approving the new structure, but it should not be considered the final production version yet.</p>
+
+    </main>
+    <footer class="doc-footer">
+      <span>MIKO Studios</span>
+      <span>mikostudios.co</span>
+    </footer>
+  </div>
+</body>
+</html>

@@ -103,8 +103,8 @@
       max-width: 360px;
       color: var(--olive);
       font-family: var(--mono);
-      font-size: 10px;
-      line-height: 1.45;
+      font-size: 11px;
+      line-height: 1.5;
       text-align: right;
       text-transform: uppercase;
     }
@@ -128,7 +128,7 @@
     h1 {
       max-width: 780px;
       margin-bottom: 16px;
-      font-size: 50px;
+      font-size: 52px;
       line-height: 0.92;
       font-weight: 300;
     }
@@ -137,8 +137,8 @@
       margin-top: 32px;
       padding-top: 24px;
       border-top: 1px solid var(--rule);
-      font-size: 27px;
-      line-height: 1.05;
+      font-size: 29px;
+      line-height: 1.08;
       page-break-after: avoid;
     }
 
@@ -146,21 +146,21 @@
       margin-top: 20px;
       color: var(--olive);
       font-family: var(--mono);
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 600;
-      line-height: 1.3;
+      line-height: 1.35;
       text-transform: uppercase;
     }
 
     p,
     li {
       font-family: var(--mono);
-      font-size: 10.5px;
-      line-height: 1.54;
+      font-size: 12.5px;
+      line-height: 1.62;
     }
 
     p {
-      margin: 9px 0;
+      margin: 10px 0;
     }
 
     a {
@@ -176,7 +176,7 @@
     }
 
     li {
-      margin: 4px 0;
+      margin: 5px 0;
     }
 
     code {
@@ -192,9 +192,9 @@
     }
 
     input[type="checkbox"] {
-      width: 10px;
-      height: 10px;
-      margin: 0 6px 0 -18px;
+      width: 12px;
+      height: 12px;
+      margin: 0 7px 0 -20px;
       accent-color: var(--olive);
       transform: translateY(1px);
     }
@@ -213,8 +213,64 @@
       margin-top: 18px;
       color: var(--olive);
       font-family: var(--mono);
-      font-size: 9px;
+      font-size: 10px;
       text-transform: uppercase;
+    }
+
+    @media screen and (max-width: 700px) {
+      .page {
+        padding: 22px 16px 34px;
+      }
+
+      .brand-header {
+        gap: 18px;
+        padding-bottom: 22px;
+        margin-bottom: 20px;
+      }
+
+      .brand-logo {
+        width: 104px;
+      }
+
+      .brand-meta {
+        max-width: 250px;
+        font-size: 10px;
+      }
+
+      main {
+        padding: 28px 22px 32px;
+      }
+
+      h1 {
+        font-size: 42px;
+      }
+
+      h2 {
+        font-size: 25px;
+      }
+    }
+
+    @media screen and (max-width: 480px) {
+      .page {
+        padding: 18px 14px 30px;
+      }
+
+      .brand-header {
+        flex-direction: column;
+      }
+
+      .brand-meta {
+        max-width: none;
+        text-align: left;
+      }
+
+      main {
+        padding: 24px 18px 28px;
+      }
+
+      h1 {
+        font-size: 38px;
+      }
     }
 
     @media print {
@@ -289,8 +345,7 @@
 </ul>
 <p>This does not mean the catalog is production-ready. The structure is now available for review, but TEJESTA still needs to validate groupings, names, images, SKUs, inventory, and content.</p>
 <h3>New Theme</h3>
-<p>We have also created the new theme in GitHub to speed up development and keep better control over changes:</p>
-<p><a href="https://github.com/AJRAtoni/tejesta">https://github.com/AJRAtoni/tejesta</a></p>
+<p>We have also created a GitHub repository to speed up development and keep better control over changes.</p>
 <p>This lets us work in a more organized way, test changes in development, and only move validated updates to the live site.</p>
 <h3>Visual Design</h3>
 <p>We have not worked on the final visual design yet: colors, typography, graphic style, visual polish, or the complete aesthetic direction.</p>

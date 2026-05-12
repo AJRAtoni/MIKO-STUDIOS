@@ -206,6 +206,74 @@
       background: var(--olive-soft);
     }
 
+    .meeting-archive {
+      margin: 24px 0 32px;
+      border-top: 1px solid var(--rule);
+      border-bottom: 1px solid var(--rule);
+      background: var(--olive-soft);
+    }
+
+    .meeting-archive > summary {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 4px 18px;
+      padding: 14px 16px;
+      color: var(--olive);
+      cursor: pointer;
+      font-family: var(--mono);
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.35;
+      list-style: none;
+      text-transform: uppercase;
+    }
+
+    .meeting-archive > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    .meeting-archive > summary::after {
+      content: "+";
+      grid-column: 2;
+      grid-row: 1;
+      flex: 0 0 auto;
+      align-self: center;
+      color: var(--charcoal);
+      font-size: 16px;
+      line-height: 1;
+    }
+
+    .meeting-archive[open] > summary::after {
+      content: "-";
+    }
+
+    .meeting-archive__label {
+      grid-column: 1;
+      grid-row: 1;
+      color: var(--charcoal);
+    }
+
+    .meeting-archive__meta {
+      grid-column: 1 / -1;
+      grid-row: 2;
+      color: var(--olive);
+      font-size: 10px;
+      text-align: left;
+    }
+
+    .meeting-archive__content {
+      padding: 4px 22px 28px;
+      border-top: 1px solid var(--rule);
+    }
+
+    .meeting-current {
+      margin-top: 30px;
+    }
+
+    .meeting-current h2 {
+      margin-top: 0;
+    }
+
     .doc-footer {
       display: flex;
       justify-content: space-between;
@@ -239,6 +307,10 @@
 
       main {
         padding: 28px 22px 32px;
+      }
+
+      .meeting-archive__content {
+        padding: 2px 18px 24px;
       }
 
       h1 {
@@ -311,7 +383,14 @@
       </div>
     </header>
     <main>
-      <h1>TEJESTA 2026 - Meeting Summary</h1>
+      <h1>TEJESTA 2026</h1>
+<p>Last updated: 2026-05-12<br>Project: Shopify remodel, catalog structure, and new theme</p>
+<details class="meeting-archive">
+<summary>
+  <span class="meeting-archive__label">Previous meeting</span>
+  <span class="meeting-archive__meta">2026-05-06 - Catalog structure, PDP, filters, and migration plan</span>
+</summary>
+<div class="meeting-archive__content">
 <p>Date: 2026-05-06<br>Project: Shopify remodel, catalog structure, and new theme</p>
 <hr>
 <h2>1. Project Goal</h2>
@@ -526,6 +605,53 @@
 <hr>
 <h2>Important Note</h2>
 <p>The development site is a working environment. It is useful for reviewing and approving the new structure, but it should not be considered the final production version yet.</p>
+</div>
+</details>
+
+<section class="meeting-current">
+<h2>Next Weekly Meeting - Work Tracking</h2>
+<p>Date: week of 2026-05-12<br>Focus: track what TEJESTA requested after the previous review and what has already been implemented in the development workflow.</p>
+
+<h3>What TEJESTA Asked For</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Collection cards should show a maximum of 6 variant thumbnails on hover. If a product has more colorways, the sixth slot should show a <code>+</code> indicator.</li>
+<li><input checked="" disabled="" type="checkbox"> Product pages should show the product name together with the selected <code>Colorway</code>.</li>
+<li><input checked="" disabled="" type="checkbox"> Accessibility must be treated as a main requirement because some buyers may have vision difficulties.</li>
+<li><input disabled="" type="checkbox"> The homepage hero should rotate randomly on each refresh once final hero assets are confirmed.</li>
+<li><input checked="" disabled="" type="checkbox"> Textile and accessory products, including t-shirts, blankets, hats, and similar items, should be removed from the eyewear staging import.</li>
+<li><input disabled="" type="checkbox"> Collection filters should be defined from the Google Sheet TEJESTA will send, instead of guessing the final filter system.</li>
+</ul>
+
+<h3>What We Have Already Done</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Updated the collection card theme logic so only 6 slots appear, with a <code>+</code> overflow slot when there are more than 6 colorways.</li>
+<li><input checked="" disabled="" type="checkbox"> Linked the <code>+</code> overflow slot so it behaves like the other collection-card variant links and sends the shopper to the selected product page.</li>
+<li><input checked="" disabled="" type="checkbox"> Updated the PDP title behavior so the page can display <code>Model Colorway</code> and update when the selected variant changes.</li>
+<li><input checked="" disabled="" type="checkbox"> Normalized the visible variant selector label to <code>Colorway</code>, with the selected value shown to the shopper.</li>
+<li><input checked="" disabled="" type="checkbox"> Updated the catalog generator to exclude textiles/accessories from the staging import and create a separate action list for review.</li>
+<li><input checked="" disabled="" type="checkbox"> Regenerated staging outputs after the exclusion pass: 353 eyewear variant rows, 55 new staged products, 9 excluded textile/accessory products, and 351 redirects that still need to be kept for migration.</li>
+<li><input checked="" disabled="" type="checkbox"> Kept the original Shopify export unchanged and preserved the reproducible generator workflow for future catalog updates.</li>
+</ul>
+
+<h3>Still Pending</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Confirm final hero assets before implementing random homepage rotation.</li>
+<li><input disabled="" type="checkbox"> Receive and review TEJESTA's Google Sheet for filters, internal metafields/tags, and desktop/mobile presentation.</li>
+<li><input disabled="" type="checkbox"> Review the 9 excluded textile/accessory products and decide whether they should be archived, deleted, or managed separately in Shopify admin.</li>
+<li><input disabled="" type="checkbox"> Complete accessibility QA: contrast, readable type sizes, touch targets, visible focus states, keyboard navigation, alt text, and variant-selector legibility.</li>
+<li><input disabled="" type="checkbox"> Continue reviewing product groupings, SKUs, images, inventory, and redirect handling before production migration.</li>
+</ul>
+
+<h3>Open Points To Discuss</h3>
+<ol>
+<li>Do we approve the new collection-card behavior with 5 visible thumbnails plus the <code>+</code> slot when a product has more than 6 colorways?</li>
+<li>Does TEJESTA approve <code>Model Colorway</code> as the default PDP title behavior?</li>
+<li>Which hero images should be used for random homepage rotation?</li>
+<li>Which filters from the upcoming sheet are essential for launch, and which can wait?</li>
+<li>Who will review and approve the excluded textile/accessory list in Shopify admin?</li>
+<li>What accessibility checks should be treated as launch blockers?</li>
+</ol>
+</section>
 
     </main>
     <footer class="doc-footer">

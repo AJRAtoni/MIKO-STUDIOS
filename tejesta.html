@@ -179,6 +179,15 @@
       margin: 5px 0;
     }
 
+    ul:has(> li > input[type="checkbox"]) {
+      padding-left: 21px;
+      list-style: none;
+    }
+
+    ul:has(> li > input[type="checkbox"]) > li {
+      list-style: none;
+    }
+
     code {
       padding: 1px 4px;
       background: var(--olive-soft);
@@ -192,11 +201,25 @@
     }
 
     input[type="checkbox"] {
-      width: 12px;
-      height: 12px;
-      margin: 0 7px 0 -20px;
-      accent-color: var(--olive);
-      transform: translateY(1px);
+      width: 13px;
+      height: 13px;
+      margin: 0 8px 0 -21px;
+      appearance: none;
+      -webkit-appearance: none;
+      border: 0;
+      border-radius: 0;
+      background: transparent;
+      background-image: url("data:image/svg+xml,%3Csvg width='13' height='13' viewBox='0 0 13 13' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='2.5' y='2.5' width='8' height='8' stroke='%236E6E6E' stroke-width='1'/%3E%3C/svg%3E");
+      background-position: center;
+      background-repeat: no-repeat;
+      background-size: 13px 13px;
+      forced-color-adjust: none;
+      opacity: 1;
+      transform: translateY(2px);
+    }
+
+    input[type="checkbox"]:checked {
+      background-image: url("data:image/svg+xml,%3Csvg width='13' height='13' viewBox='0 0 13 13' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M2.4 6.8L5.1 9.5L10.8 3.4' stroke='%232F7D4B' stroke-width='1.9' stroke-linecap='square' stroke-linejoin='miter'/%3E%3C/svg%3E");
     }
 
     blockquote {
@@ -204,6 +227,50 @@
       padding: 12px 18px;
       border-left: 3px solid var(--olive);
       background: var(--olive-soft);
+    }
+
+    .design-options {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+      margin: 18px 0 16px;
+    }
+
+    .design-option {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+    }
+
+    .design-option a {
+      display: block;
+      overflow: hidden;
+      border: 1px solid var(--rule);
+      background: var(--cream);
+    }
+
+    .design-option img {
+      display: block;
+      width: 100%;
+      height: 260px;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    .design-option figcaption {
+      color: var(--charcoal);
+      font-family: var(--mono);
+      font-size: 11px;
+      line-height: 1.45;
+      text-transform: uppercase;
+    }
+
+    .design-option__note {
+      display: block;
+      margin-top: 2px;
+      color: var(--olive);
+      font-size: 10px;
+      text-transform: none;
     }
 
     .meeting-archive {
@@ -313,6 +380,14 @@
         padding: 2px 18px 24px;
       }
 
+      .design-options {
+        gap: 14px;
+      }
+
+      .design-option img {
+        height: 220px;
+      }
+
       h1 {
         font-size: 42px;
       }
@@ -340,6 +415,14 @@
         padding: 24px 18px 28px;
       }
 
+      .design-options {
+        grid-template-columns: 1fr;
+      }
+
+      .design-option img {
+        height: 280px;
+      }
+
       h1 {
         font-size: 38px;
       }
@@ -360,6 +443,12 @@
       }
       .brand-header {
         margin-bottom: 18px;
+      }
+      .design-options {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .design-option img {
+        height: 170px;
       }
       h2 {
         break-after: avoid;
@@ -384,7 +473,7 @@
     </header>
     <main>
       <h1>TEJESTA 2026</h1>
-<p>Last updated: 2026-05-12<br>Project: Shopify remodel, catalog structure, and new theme</p>
+<p>Last updated: 2026-05-18<br>Project: Shopify remodel, catalog structure, and new theme</p>
 <details class="meeting-archive">
 <summary>
   <span class="meeting-archive__label">Previous meeting</span>
@@ -609,8 +698,8 @@
 </details>
 
 <section class="meeting-current">
-<h2>Next Weekly Meeting - Work Tracking</h2>
-<p>Date: week of 2026-05-12<br>Focus: track what TEJESTA requested after the previous review and what has already been implemented in the development workflow.</p>
+<h2>This Week Meeting</h2>
+<p>Date: week of 2026-05-18<br>Focus: track what TEJESTA requested after the previous review, what has already been implemented in the development workflow, and which homepage direction should move forward.</p>
 
 <h3>What TEJESTA Asked For</h3>
 <ul>
@@ -618,9 +707,36 @@
 <li><input checked="" disabled="" type="checkbox"> Product pages should show the product name together with the selected <code>Colorway</code>.</li>
 <li><input checked="" disabled="" type="checkbox"> Accessibility must be treated as a main requirement because some buyers may have vision difficulties.</li>
 <li><input disabled="" type="checkbox"> The homepage hero should rotate randomly on each refresh once final hero assets are confirmed.</li>
+<li><input disabled="" type="checkbox"> Review the two homepage design directions sent to TEJESTA and decide which version should be used as the base for development.</li>
 <li><input checked="" disabled="" type="checkbox"> Textile and accessory products, including t-shirts, blankets, hats, and similar items, should be removed from the eyewear staging import.</li>
 <li><input disabled="" type="checkbox"> Collection filters should be defined from the Google Sheet TEJESTA will send, instead of guessing the final filter system.</li>
+<li><input checked="" disabled="" type="checkbox"> TEJESTA sent the product list for the website; received on 2026-05-18 and added to the catalog review tasks.</li>
 </ul>
+
+<h3>Homepage Design Options To Review</h3>
+<p>Two homepage directions were shared with TEJESTA before the meeting. During the call, we should compare them side by side and choose the version that will become the base for the homepage build.</p>
+<p>Reference Slack message: <a href="https://mikostudios.slack.com/archives/C0481N0AB9C/p1778690796584819">homepage design options sent to TEJESTA</a></p>
+<div class="design-options">
+  <figure class="design-option">
+    <a href="images/tejesta/homepage-option-a.jpg" target="_blank" rel="noopener">
+      <img src="images/tejesta/homepage-option-a-thumb.jpg" alt="TEJESTA homepage design option A thumbnail">
+    </a>
+    <figcaption>
+      Option A
+      <span class="design-option__note">Click to open the larger preview.</span>
+    </figcaption>
+  </figure>
+  <figure class="design-option">
+    <a href="images/tejesta/homepage-option-b.jpg" target="_blank" rel="noopener">
+      <img src="images/tejesta/homepage-option-b-thumb.jpg" alt="TEJESTA homepage design option B thumbnail">
+    </a>
+    <figcaption>
+      Option B
+      <span class="design-option__note">Click to open the larger preview.</span>
+    </figcaption>
+  </figure>
+</div>
+<p>Decision needed from TEJESTA: choose Option A or Option B as the homepage direction, or approve a hybrid direction before development starts.</p>
 
 <h3>What We Have Already Done</h3>
 <ul>
@@ -630,6 +746,7 @@
 <li><input checked="" disabled="" type="checkbox"> Normalized the visible variant selector label to <code>Colorway</code>, with the selected value shown to the shopper.</li>
 <li><input checked="" disabled="" type="checkbox"> Updated the catalog generator to exclude textiles/accessories from the staging import and create a separate action list for review.</li>
 <li><input checked="" disabled="" type="checkbox"> Regenerated staging outputs after the exclusion pass: 353 eyewear variant rows, 55 new staged products, 9 excluded textile/accessory products, and 351 redirects that still need to be kept for migration.</li>
+<li><input checked="" disabled="" type="checkbox"> Reviewed the 9 excluded textile/accessory products and decided whether they should be archived, deleted, or managed separately in Shopify admin.</li>
 <li><input checked="" disabled="" type="checkbox"> Kept the original Shopify export unchanged and preserved the reproducible generator workflow for future catalog updates.</li>
 </ul>
 
@@ -637,7 +754,7 @@
 <ul>
 <li><input disabled="" type="checkbox"> Confirm final hero assets before implementing random homepage rotation.</li>
 <li><input disabled="" type="checkbox"> Receive and review TEJESTA's Google Sheet for filters, internal metafields/tags, and desktop/mobile presentation.</li>
-<li><input disabled="" type="checkbox"> Review the 9 excluded textile/accessory products and decide whether they should be archived, deleted, or managed separately in Shopify admin.</li>
+<li><input disabled="" type="checkbox"> Review the product list received from TEJESTA on 2026-05-18 against the staging product mapping and confirm what should be included on the website.</li>
 <li><input disabled="" type="checkbox"> Complete accessibility QA: contrast, readable type sizes, touch targets, visible focus states, keyboard navigation, alt text, and variant-selector legibility.</li>
 <li><input disabled="" type="checkbox"> Continue reviewing product groupings, SKUs, images, inventory, and redirect handling before production migration.</li>
 </ul>
@@ -646,7 +763,9 @@
 <ol>
 <li>Do we approve the new collection-card behavior with 5 visible thumbnails plus the <code>+</code> slot when a product has more than 6 colorways?</li>
 <li>Does TEJESTA approve <code>Model Colorway</code> as the default PDP title behavior?</li>
-<li>Which hero images should be used for random homepage rotation?</li>
+<li>Which homepage design direction should we use: Option A, Option B, or a hybrid direction?</li>
+<li>After the homepage direction is selected, which hero images should be used for random homepage rotation?</li>
+<li>Does the product list received from TEJESTA on 2026-05-18 represent the final website assortment for launch?</li>
 <li>Which filters from the upcoming sheet are essential for launch, and which can wait?</li>
 <li>Who will review and approve the excluded textile/accessory list in Shopify admin?</li>
 <li>What accessibility checks should be treated as launch blockers?</li>

@@ -473,7 +473,7 @@
     </header>
     <main>
       <h1>TEJESTA 2026</h1>
-<p>Last updated: 2026-05-19<br>Project: Shopify remodel, catalog structure, and new theme</p>
+<p>Last updated: 2026-05-26<br>Project: Shopify remodel, catalog structure, and new theme</p>
 <details class="meeting-archive">
 <summary>
   <span class="meeting-archive__label">Previous meeting</span>
@@ -699,9 +699,14 @@
 </div>
 </details>
 
-<section class="meeting-current">
+<details class="meeting-archive">
+<summary>
+  <span class="meeting-archive__label">Previous meeting</span>
+  <span class="meeting-archive__meta">2026-05-18 - Homepage direction, requested updates, and implementation status</span>
+</summary>
+<div class="meeting-archive__content">
 <h2>This Week Meeting</h2>
-<p>Date: week of 2026-05-18<br>Focus: track what TEJESTA requested after the previous review, what has already been implemented in the development workflow, and which homepage direction should move forward.</p>
+<p>Date: 2026-05-18<br>Focus: track what TEJESTA requested after the previous review, what has already been implemented in the development workflow, and which homepage direction should move forward.</p>
 
 <h3>What TEJESTA Asked For</h3>
 <ul>
@@ -774,6 +779,104 @@
 <li>For RX products, should shoppers still be allowed to add items to cart, or should the product page direct them to the Store Locator instead?</li>
 <li>How should the search experience be displayed: simple header icon, expanded search bar, overlay modal, or another layout?</li>
 </ol>
+</div>
+</details>
+
+<section class="meeting-current">
+<h2>Meeting - 2026-05-20</h2>
+<p>Date: 2026-05-20<br>Focus: review the homepage direction, confirm the next design behavior, and define the work needed for navigation, shop/category pages, and PDP.</p>
+
+<h3>Meeting Summary</h3>
+<ul>
+<li>The selected homepage direction is moving forward, but TEJESTA still wants to see the missing material/design layer added before treating it as final.</li>
+<li>The current development build should be understood as a functional foundation. Product logic and internal behavior are being prepared, but the visual system is not final yet.</li>
+<li>TEJESTA wants the Shopify setup to be easy to manage internally: banners, hero images, homepage copy, and media should be simple to change once the structure is in place.</li>
+<li>The next design focus is navigation, shop/category pages, product pages, and homepage mobile.</li>
+<li>The site should feel more branded and less like a generic Shopify theme by using TEJESTA-specific visual details, especially filigree/art-deco-inspired elements.</li>
+</ul>
+
+<h3>Decisions</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Homepage hero rotation should switch daily / every 24 hours instead of changing only on refresh.</li>
+<li><input checked="" disabled="" type="checkbox"> Hero image or video and hero copy should be managed together, so each highlighted frame, collection, or story can have its own text.</li>
+<li><input checked="" disabled="" type="checkbox"> The top banner should remain easy to hide or unhide from the theme/admin setup.</li>
+<li><input checked="" disabled="" type="checkbox"> PDP information should not overlay the product photography.</li>
+<li><input checked="" disabled="" type="checkbox"> Product detail sections such as dimensions, description, care, and product information can use dropdown/accordion behavior.</li>
+<li><input checked="" disabled="" type="checkbox"> Instead of a generic "new release" badge, the PDP should explore showing the collection or release name near the product title.</li>
+<li><input checked="" disabled="" type="checkbox"> Optical/RX products should continue avoiding visible pricing and should guide shoppers toward store/location information.</li>
+</ul>
+
+<h3>MIKO Action Items</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Update homepage hero rotation so it changes every 24 hours, with image/media and copy treated as one content pair.</li>
+<li><input disabled="" type="checkbox"> Keep the top banner configurable so TEJESTA can hide or show it without code changes.</li>
+<li><input disabled="" type="checkbox"> Continue homepage mobile design and make sure the selected homepage direction works cleanly on mobile.</li>
+<li><input disabled="" type="checkbox"> Start navigation and shop/category page design with a more custom TEJESTA visual treatment.</li>
+<li><input disabled="" type="checkbox"> Explore a stylized filter/navigation area inspired by reference sites, but adapted to TEJESTA's own brand language.</li>
+<li><input disabled="" type="checkbox"> Design the PDP layout without text overlaying images, and create a more branded product-info area.</li>
+<li><input disabled="" type="checkbox"> Add or design PDP dropdown sections for dimensions, description, care, and product details.</li>
+<li><input disabled="" type="checkbox"> Explore a collection/release label near the PDP title instead of a generic badge.</li>
+<li><input disabled="" type="checkbox"> Explore breadcrumb/link-tree behavior on PDPs so shoppers can navigate back to the relevant collection or release.</li>
+<li><input disabled="" type="checkbox"> Add the missing <code>Raul</code> frame to the eyewear/category review list.</li>
+<li><input disabled="" type="checkbox"> Plan an editorial/craftsmanship block below the main PDP content so the page does not jump directly to "You may also like."</li>
+<li><input disabled="" type="checkbox"> Recheck Optical/RX product behavior: no visible price, clear path toward Store Locator or locations, and no confusing cart flow.</li>
+</ul>
+
+<h3>TEJESTA Action Items</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Send the brand/style-guide assets, older filigree elements, and any additional visual motifs that can be used across the site.</li>
+<li><input disabled="" type="checkbox"> Prepare or send a one-page collection of new design elements, especially the art-deco-inspired direction discussed in the meeting.</li>
+<li><input disabled="" type="checkbox"> Resend access/password details for the current site or any reference environment MIKO should review.</li>
+<li><input disabled="" type="checkbox"> Confirm which hero images, videos, frames, collections, and copy should be included in the daily homepage rotation.</li>
+<li><input disabled="" type="checkbox"> Confirm whether TEJESTA wants to keep the current font or move toward a new "2026" font direction.</li>
+<li><input disabled="" type="checkbox"> Confirm how far PDP breadcrumbs should go: collection only, collection + release, or another hierarchy.</li>
+</ul>
+
+<h3>Open Points</h3>
+<ol>
+<li>Which exact homepage hero assets and copy combinations should rotate daily?</li>
+<li>Which TEJESTA visual elements should be used on the homepage, shop/category pages, PDP, CTA buttons, and navigation?</li>
+<li>Should the visual direction lean more art deco than the current Native American-inspired brand elements?</li>
+<li>What should the final PDP breadcrumb hierarchy be?</li>
+<li>What editorial/craftsmanship content should appear below the PDP gallery for each style, collection, or product family?</li>
+<li>What new font direction should be tested for the 2026 site?</li>
+</ol>
+
+<h3>Source</h3>
+<p>Meeting transcript generated from the 2026-05-20 audio recording and reviewed for action items. Some wording was normalized from the raw transcript where Whisper misread brand or Shopify terms.</p>
+
+<h2>Slack Update - 2026-05-26</h2>
+<p>Date: 2026-05-26<br>Source: Slack message from Mike, shared with Toni, Mia, and Enrique Larios.</p>
+
+<h3>Client Direction</h3>
+<ul>
+<li>TEJESTA has been testing small design details to make the site feel more on brand.</li>
+<li>The reference sent shows art-deco filigree-style corner/detail elements added around the product/PDP composition.</li>
+<li>The goal is to add subtle branded flair without overdoing the design or making the interface feel too decorative.</li>
+<li>This should be treated as a work in progress: test where these elements can go, review how they affect the product page, and refine with the team.</li>
+</ul>
+
+<h3>Team Note</h3>
+<ul>
+<li>Enrique Larios has been added to the channel as Graphic Designer.</li>
+<li>MIKO and Enrique will work together to get these visual elements correct as needed.</li>
+</ul>
+
+<h3>Action Items</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Explore small art-deco filigree details for product/PDP components, starting from the reference screenshot.</li>
+<li><input disabled="" type="checkbox"> Identify safe placements for decorative elements: corners, separators, product-info areas, headings, or supporting blocks.</li>
+<li><input disabled="" type="checkbox"> Keep the treatment subtle so the site gains brand character without visual clutter.</li>
+<li><input disabled="" type="checkbox"> Coordinate with Enrique Larios on final graphic assets and direction.</li>
+</ul>
+
+<h3>Original Slack Message</h3>
+<blockquote>
+<p>@Toni @Mia We have been playing with design elements, and want to do small details like the first image below with art deco filigree added to some elements to make them look more on brand.</p>
+<p>Toni want to put this on your radar so we can figure out how to add these elements correctly</p>
+<p>I have added @Enrique Larios to the channel who is our Graphic designer. we will work together to get these elements correct as need.</p>
+<p>this will be a work in progress to see where things can go to make things have a bit of flare without over doing it.</p>
+</blockquote>
 </section>
 
     </main>

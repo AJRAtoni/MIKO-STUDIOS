@@ -974,62 +974,92 @@
 </div>
 </details>
 
+<details class="meeting-archive">
+<summary>
+  <span class="meeting-archive__label">Previous status</span>
+  <span class="meeting-archive__meta">2026-07-08 - Implementation status before latest meeting</span>
+</summary>
+<div class="meeting-archive__content">
+<h2>Status Snapshot - 2026-07-08</h2>
+<p>Date: 2026-07-08<br>Source: TEJESTA Slack feedback, design references, and Shopify theme implementation work before the latest call.</p>
+
+<h3>Completed Before This Meeting</h3>
+<ul>
+<li><input checked="" disabled="" type="checkbox"> Master TEJESTA website assets folder reviewed, including fonts, vectored homepage layout, photo folders, <code>Desktop - 3v2.pdf</code>, and <code>SHOP ALL PAGE.ai</code>.</li>
+<li><input checked="" disabled="" type="checkbox"> Restored static header/logo behavior after TEJESTA decided not to keep the dynamic logo/color-sampling pass.</li>
+<li><input checked="" disabled="" type="checkbox"> Created a Customizer-editable random homepage hero section and kept the current hero as the first option.</li>
+<li><input checked="" disabled="" type="checkbox"> Refined header spacing, hid the customer/account icon, and moved search into the right-side header action area.</li>
+<li><input checked="" disabled="" type="checkbox"> Reduced homepage descriptive copy size for SEVEN, Sun, Optical, and Artesania content blocks.</li>
+<li><input checked="" disabled="" type="checkbox"> Built and published Shop All filters with TEJESTA linework, dropdown frames, selected states, smaller type, URL-driven Sun / Optical routing, and no visible <code>Products</code> page title.</li>
+<li><input checked="" disabled="" type="checkbox"> Updated footer headings from <code>Discover</code> to <code>Collection</code> and from <code>Customer Service</code> to <code>Information</code>.</li>
+</ul>
+
+<h3>Carry-Forward Items</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Adapt homepage and Shop All mobile after TEJESTA confirms the mobile behavior or sends final mobile screens.</li>
+<li><input disabled="" type="checkbox"> Confirm whether the missing round / <code>Raul</code> frame needs to be added to the eyewear/category review list.</li>
+<li><input disabled="" type="checkbox"> After importing the new theme into the real Shopify store as an unpublished theme, configure variant image metafields and product collections on the final live products.</li>
+<li><input disabled="" type="checkbox"> Make collection cards use the first image of the selected first variant, so TEJESTA can merchandise the visible card image by reordering variants.</li>
+</ul>
+</div>
+</details>
+
 <section class="meeting-current">
-<h2>Current Work Status - 2026-07-08</h2>
-<p>Date: 2026-07-08<br>Source: TEJESTA Slack feedback, design references, and the current Shopify theme workflow. Focus: what has already been implemented, what still needs MIKO follow-up, and what TEJESTA still needs to confirm.</p>
+<h2>Meeting - 2026-07-08</h2>
+<p>Date: 2026-07-08<br>Source: audio recording <code>7830 NW 57th St.qta</code>, transcribed to <code>transcripts/tejesta-2026-07-08-meeting.txt</code>. Focus: homepage approval, rotating hero assets, header behavior, Shop All/mobile, product architecture, search, menu, PDP, and cart flow.</p>
 
-<h3>Current Direction</h3>
+<h3>Meeting Summary</h3>
 <ul>
-<li>The homepage should stay editable through Shopify Customizer wherever practical, especially for hero media, copy, and rotation entries.</li>
-<li>Shop All should become the main shopping surface: Sun and Optical should route into <code>/collections/all</code> with the correct filter already selected, instead of behaving like separate collection pages with stale headings.</li>
-<li>The collection filter UI should follow the <code>SHOP ALL PAGE.ai</code> / <code>Desktop - 3v2.pdf</code> visual language: fine linework, TEJESTA art-deco separators, selected values in black, default <code>All</code> values in gray, and dropdown frames that preserve the original geometry.</li>
-<li>Homepage and header spacing should stay refined and light: header controls closer to the viewport edges, reduced descriptive copy sizes, and no unnecessary header/account clutter.</li>
+<li>TEJESTA likes the current homepage direction. The site feels clean and is moving in the right direction, but they expect more branded refinements now that the foundation is working.</li>
+<li>The 24-hour homepage hero rotation is approved as a direction. TEJESTA will send images and short video assets, and each asset can have its own link if needed.</li>
+<li>The homepage hero can keep the Collection Seven copy block below the media for now, even when some rotating assets are not strictly Collection Seven content.</li>
+<li>The homepage header needs a new scroll state: transparent over the hero at the top, then a white bar with black crest/logo, menu, and icons once the page scrolls over content.</li>
+<li>Shop All routing is in a better place: clicking Sunglasses / Optical should no longer leave stale page titles like <code>Sunglasses</code> visible when the selected filter changes.</li>
+<li>The product architecture remains the biggest open strategic decision: unified products with colorway variants feel cleaner, but separate color products preserve stronger merchandising and color-filter flexibility.</li>
+<li>Mobile Shop All should stay clean and visual. On mobile, tapping a color/variant option should change the card image instead of immediately navigating to the PDP; the main product image should remain the path into the product page.</li>
+<li>The current search experience feels too small and generic. TEJESTA wants a more designed search surface that behaves closer to a shop page, with stronger visual framing, possible imagery, and useful suggestions/results.</li>
+<li>The PDP and cart flow are still early. TEJESTA wants the PDP typography/filigree/product area redesigned, and add-to-cart should not pull the shopper away from the product page into a full cart page.</li>
 </ul>
 
-<h3>Reference / Asset Status</h3>
+<h3>Decisions / Direction Confirmed</h3>
 <ul>
-<li><input checked="" disabled="" type="checkbox"> Master 2026 TEJESTA website files folder received: <a href="https://drive.google.com/drive/folders/1E6KA-ONhc8uz3pL1iwgGJL46i_IVVVTb?usp=sharing">Google Drive folder</a>.</li>
-<li><input checked="" disabled="" type="checkbox"> Reviewed the master Google Drive folder and confirmed that fonts, vectored homepage layout, and photo folders are accessible.</li>
-<li><input checked="" disabled="" type="checkbox"> Used <code>Desktop - 3v2.pdf</code>, <code>SHOP ALL PAGE.ai</code>, and TEJESTA screenshots as references for the filter separator, dropdown geometry, and spacing polish.</li>
-<li><input checked="" disabled="" type="checkbox"> Kept the first homepage pass focused on the approved structure, then tested rotating hero imagery once the setup was clean and working.</li>
+<li><input checked="" disabled="" type="checkbox"> Use time-based homepage hero rotation, changing roughly every 24 hours, instead of changing only on refresh.</li>
+<li><input checked="" disabled="" type="checkbox"> Allow each hero media asset to have its own destination link when TEJESTA provides the content/link pair.</li>
+<li><input checked="" disabled="" type="checkbox"> Keep internal Shop All pages visually stable while testing the new homepage-only scroll header treatment.</li>
+<li><input checked="" disabled="" type="checkbox"> Keep Shop All mobile focused on large visual product cards, without price or extra product data in the grid.</li>
+<li><input checked="" disabled="" type="checkbox"> Use a side cart / cart drawer style add-to-cart interaction instead of taking the shopper directly away from the PDP.</li>
 </ul>
 
-<h3>Recent Completed Work</h3>
+<h3>MIKO Action Items</h3>
 <ul>
-<li><input checked="" disabled="" type="checkbox"> Removed the dynamic header logo/color-sampling system after TEJESTA decided not to keep it, and restored the static TEJESTA logo behavior.</li>
-<li><input checked="" disabled="" type="checkbox"> Created a Customizer-editable TEJESTA random homepage hero section and replaced the first homepage hero with it, preserving the current hero as the first option.</li>
-<li><input checked="" disabled="" type="checkbox"> Hid the customer/account icon from the header and moved the search icon into the right-side header action area.</li>
-<li><input checked="" disabled="" type="checkbox"> Preserved normal header spacing on internal pages while keeping the transparent overlay behavior only on the homepage.</li>
-<li><input checked="" disabled="" type="checkbox"> Adjusted homepage header spacing so hamburger and cart sit closer to the viewport edges.</li>
-<li><input checked="" disabled="" type="checkbox"> Reduced the descriptive copy size for the SEVEN section and the Sun / Optical / Artesania homepage banners, including a second tightening pass after review.</li>
-<li><input checked="" disabled="" type="checkbox"> Built and published the Shop All filters based on the TEJESTA PDF/AI references, including the line-art divider, dropdown frame, selected states, smaller type, URL-driven Sun / Optical routing, and removal of the visible <code>Products</code> title.</li>
-<li><input checked="" disabled="" type="checkbox"> Updated footer column headings from <code>Discover</code> to <code>Collection</code> and from <code>Customer Service</code> to <code>Information</code>.</li>
+<li><input disabled="" type="checkbox"> Add and test the homepage scroll-header state: transparent at the top, then white background bar with black crest/logo, menu, and icons after scrolling.</li>
+<li><input disabled="" type="checkbox"> Thin and lighten the decorative linework where TEJESTA noted that the Shop All / connected-line treatment still feels too dark or heavy.</li>
+<li><input disabled="" type="checkbox"> Implement the new hamburger/dropdown menu direction from the received menu design and add richer lower menu options so it does not feel basic.</li>
+<li><input disabled="" type="checkbox"> Redesign search as a fuller branded experience: framed input treatment similar to the email signup, possible image/suggestion areas, and search results that feel closer to a Shop All page than a small list.</li>
+<li><input disabled="" type="checkbox"> Update collection-card/mobile behavior so tapping a color option changes the image on the card, while tapping the main image opens the PDP.</li>
+<li><input disabled="" type="checkbox"> Make product cards use the first/reordered variant as the visible primary image, so TEJESTA can merchandise away from every product defaulting to <code>BRG</code> or another alphabetical first colorway.</li>
+<li><input disabled="" type="checkbox"> Continue PDP design work: new display font, filigree/line treatment, product information layout, add-to-cart/buy-now treatment, and side cart behavior.</li>
+<li><input disabled="" type="checkbox"> Prototype the side cart / cart drawer after add-to-cart and style it with the TEJESTA font and filigree language.</li>
 </ul>
 
-<h3>MIKO Pending Action Items</h3>
-<p>These are active carry-forward tasks after the latest implementation sessions. Completed items above should stay out of the pending list unless new feedback reopens them.</p>
+<h3>TEJESTA Action Items</h3>
 <ul>
-<li><input disabled="" type="checkbox"> Adapt homepage and Shop All mobile once TEJESTA sends or confirms the mobile design.</li>
-<li><input disabled="" type="checkbox"> Add the missing <code>Raul</code> frame to the eyewear/category review list.</li>
-<li><input disabled="" type="checkbox"> After importing the new theme into the real Shopify store as an unpublished theme, configure variant image metafields and product collections there so they connect to the final live products and variants.</li>
-<li><input disabled="" type="checkbox"> In collection pages, switch the large card image to use the first image of the first variant, instead of the first product gallery image, so TEJESTA can control the visible card image by reordering variant images.</li>
-</ul>
-
-<h3>TEJESTA Pending Action Items</h3>
-<p>These client-side items still need confirmation, delivery, or intentional removal from scope.</p>
-<ul>
-  <li><input disabled="" type="checkbox"> Review the latest Shopify preview and send approval or notes for homepage, Shop All, navigation, and footer.</li>
-  <li><input disabled="" type="checkbox"> Begin implementing the new hamburger dropdown menu style from the client-provided <a href="images/tejesta/menu-design.pdf" target="_blank" rel="noopener">MENU DESIGN.pdf</a> and continue with alignment once visual QA passes.</li>
-  <li><input disabled="" type="checkbox"> Send or confirm the PDP design direction, including product info, dropdown details, collection/release label, breadcrumbs, and editorial blocks.</li>
-  <li><input disabled="" type="checkbox"> Decide how sold-out colorway variants should appear: hidden, visible with a sold-out state, or another treatment.</li>
+<li><input disabled="" type="checkbox"> Upload homepage rotation assets to the Google Drive folder, including images, short videos, and any destination links that should pair with each asset.</li>
+<li><input disabled="" type="checkbox"> Decide with John whether the catalog should stay as unified products with colorway variants or return to separate color products with an app/third-party layer to merge variant behavior where needed.</li>
+<li><input disabled="" type="checkbox"> Confirm whether color filtering and showing the same frame in multiple colors across collection/editorial pages is important enough to favor the separate-product structure.</li>
+<li><input disabled="" type="checkbox"> Confirm mobile homepage / Shop All screens or approve MIKO to carry forward the clean one-column mobile direction discussed in the meeting.</li>
+<li><input disabled="" type="checkbox"> Send or confirm the PDP design direction once Enrique/Mia have the next product-page pass ready.</li>
+<li><input disabled="" type="checkbox"> Review product availability and decide whether unavailable/sold-out variants should be moved down, hidden, or removed when the product photography is outdated or inconsistent.</li>
+<li><input disabled="" type="checkbox"> Confirm product completeness, including whether one missing round / <code>Raul</code> frame still needs to be added.</li>
 </ul>
 
 <h3>Open Points</h3>
 <ol>
-<li>Does TEJESTA approve the latest Shop All filter treatment and Sun / Optical routing?</li>
-<li>When should actual frame imagery be added to the homepage?</li>
-<li>Can TEJESTA send or confirm the mobile-adapted design for the homepage and key Shop All screens?</li>
-<li>How should the search experience be displayed beyond the moved header icon: simple icon, expanded bar, overlay modal, or another layout?</li>
+<li>Final catalog architecture: unified product with colorway variants, or separate color products plus an app/merge layer?</li>
+<li>How much color filtering and color-specific merchandising does TEJESTA need for launch and for future collection/editorial pages?</li>
+<li>Which hero assets should rotate first, and should the hero itself link to Shop All, a collection, a product, or per-asset destinations?</li>
+<li>What exact imagery, suggestion blocks, and result layout should the redesigned search experience include?</li>
+<li>Should sold-out colorways remain visible, move below available variants, or be hidden when photos/availability are not launch-ready?</li>
 </ol>
 </section>
 

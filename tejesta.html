@@ -274,7 +274,7 @@
     }
 
     .meeting-archive {
-      margin: 24px 0 32px;
+      margin: 3px 0 0;
       border-top: 1px solid var(--rule);
       border-bottom: 1px solid var(--rule);
       background: var(--olive-soft);
@@ -283,8 +283,8 @@
     .meeting-archive > summary {
       display: grid;
       grid-template-columns: minmax(0, 1fr) auto;
-      gap: 4px 18px;
-      padding: 14px 16px;
+      gap: 0 18px;
+      padding: 10px 16px;
       color: var(--olive);
       cursor: pointer;
       font-family: var(--mono);
@@ -314,15 +314,9 @@
       content: "-";
     }
 
-    .meeting-archive__label {
+    .meeting-archive__meta {
       grid-column: 1;
       grid-row: 1;
-      color: var(--charcoal);
-    }
-
-    .meeting-archive__meta {
-      grid-column: 1 / -1;
-      grid-row: 2;
       color: var(--olive);
       font-size: 10px;
       text-align: left;
@@ -476,7 +470,6 @@
 <p>Last updated: 2026-07-15<br>Project: Shopify remodel, catalog structure, homepage, collection filters, and new theme</p>
 <details class="meeting-archive">
 <summary>
-  <span class="meeting-archive__label">Previous meeting</span>
   <span class="meeting-archive__meta">2026-05-06 - Catalog structure, PDP, filters, and migration plan</span>
 </summary>
 <div class="meeting-archive__content">
@@ -701,7 +694,6 @@
 
 <details class="meeting-archive">
 <summary>
-  <span class="meeting-archive__label">Previous meeting</span>
   <span class="meeting-archive__meta">2026-05-18 - Homepage direction, requested updates, and implementation status</span>
 </summary>
 <div class="meeting-archive__content">
@@ -784,7 +776,6 @@
 
 <details class="meeting-archive">
 <summary>
-  <span class="meeting-archive__label">Previous meeting</span>
   <span class="meeting-archive__meta">2026-05-20 to 2026-06-07 - Homepage hero, PDP direction, filigree details, and HD full-screen media</span>
 </summary>
 <div class="meeting-archive__content">
@@ -909,7 +900,6 @@
 
 <details class="meeting-archive">
 <summary>
-  <span class="meeting-archive__label">Previous meeting</span>
   <span class="meeting-archive__meta">2026-06-10 - Homepage visual language, catalog architecture, and wholesale implications</span>
 </summary>
 <div class="meeting-archive__content">
@@ -976,7 +966,6 @@
 
 <details class="meeting-archive">
 <summary>
-  <span class="meeting-archive__label">Previous status</span>
   <span class="meeting-archive__meta">2026-07-08 - Implementation status before latest meeting</span>
 </summary>
 <div class="meeting-archive__content">
@@ -1004,6 +993,11 @@
 </div>
 </details>
 
+<details class="meeting-archive">
+<summary>
+  <span class="meeting-archive__meta">2026-07-08 - Homepage, Shop All, product architecture, and next implementation steps</span>
+</summary>
+<div class="meeting-archive__content">
 <section class="meeting-current">
 <h2>Meeting - 2026-07-08</h2>
 <p>Date: 2026-07-08<br>Source: audio recording <code>7830 NW 57th St.qta</code>, transcribed to <code>transcripts/tejesta-2026-07-08-meeting.txt</code>. Focus: homepage approval, rotating hero assets, header behavior, Shop All/mobile, product architecture, search, menu, PDP, and cart flow.</p>
@@ -1060,6 +1054,48 @@
 <li>Which hero assets should rotate first, and should the hero itself link to Shop All, a collection, a product, or per-asset destinations?</li>
 <li>What exact imagery, suggestion blocks, and result layout should the redesigned search experience include?</li>
 <li>Should sold-out colorways remain visible, move below available variants, or be hidden when photos/availability are not launch-ready?</li>
+</ol>
+</section>
+</div>
+</details>
+
+<section class="meeting-current">
+<h2>Meeting - 2026-07-15</h2>
+<p>Date: 2026-07-15<br>Source: current TEJESTA work status. Focus: close the remaining homepage, Shop All, product, and support work before the next review.</p>
+
+<h3>Current Priorities</h3>
+<p>The next implementation pass is organized around the approved menu details, Shop All behavior and presentation, then the product-page phase once the final product assets are confirmed.</p>
+
+<h3>MIKO Action Items</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Refine the mobile menu with the approved spacing, divider, background, and alignment treatment.</li>
+<li><input disabled="" type="checkbox"> Correct collection-card image presentation so eyewear is not cropped or stretched into a square format.</li>
+<li><input disabled="" type="checkbox"> Hide sold-out products and colorways throughout collection cards, filters, search, product pages, and colorway selectors.</li>
+<li><input disabled="" type="checkbox"> Build the two-row colorway selector for larger variant ranges.</li>
+<li><input disabled="" type="checkbox"> Review Sun, RX, and Shop All navigation, including filtering and a clear route back to the full catalog.</li>
+<li><input disabled="" type="checkbox"> Create the short-description metafield and a ready-to-fill import sheet for TEJESTA product copy.</li>
+<li><input disabled="" type="checkbox"> Add controlled in-stock colorway rotation on collection cards, with a fixed option or collection ordering when needed.</li>
+<li><input disabled="" type="checkbox"> Adapt Shop All for mobile using the approved one-column layout and validate the card-to-product-page path.</li>
+<li><input disabled="" type="checkbox"> Fix the colorway and gallery mismatch so the selected variant always shows its correct images.</li>
+<li><input disabled="" type="checkbox"> Apply the agreed typography hierarchy with Louize Display and Jost, then refine final scale and weights.</li>
+<li><input disabled="" type="checkbox"> Prepare the product-page phase: expandable product details and an editorial video/banner block outside the gallery.</li>
+<li><input disabled="" type="checkbox"> Review Store Locator and define a layout that matches the new site without the unwanted cropped treatment.</li>
+<li><input disabled="" type="checkbox"> Bring FAQ, Legal, and Support into the new visual and information direction.</li>
+</ul>
+
+<h3>TEJESTA Action Items</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Provide the final menu divider asset (SVG or high-resolution PNG) and confirm its intended width.</li>
+<li><input disabled="" type="checkbox"> Complete the short product-description sheet once MIKO provides the template.</li>
+<li><input disabled="" type="checkbox"> Confirm the Store Locator direction, required locations, and store information.</li>
+<li><input disabled="" type="checkbox"> Confirm the final variant-gallery image format and whether any reshoots will occur before upload.</li>
+</ul>
+
+<h3>Recommended Order</h3>
+<ol>
+<li>Close the menu and asset details.</li>
+<li>Complete Shop All: images, sold-out behavior, colorways, filters, navigation, and mobile.</li>
+<li>Begin the product-page phase once the final product assets are available.</li>
 </ol>
 </section>
 

@@ -180,6 +180,25 @@ class InstagramTests(unittest.TestCase):
         client.head.return_value.headers = {'Content-Type': 'image/jpeg'}
         self.assertTrue(publish.published(client, self.previous))
 
+    def test_forced_publication_waits_for_build_and_public_readback(self):
+        public, github = Mock(), Mock()
+        github.post.return_value.status_code = 201
+        github.get.return_value.json.side_effect = [{'status': 'building'}, {'status': 'built'}]
+        contexts = [Mock(), Mock()]
+        contexts[0].__enter__ = Mock(return_value=public)
+        contexts[1].__enter__ = Mock(return_value=github)
+        for context in contexts:
+            context.__exit__ = Mock(return_value=False)
+        with patch.object(publish, 'ROOT', self.root), \
+                patch.object(publish.requests, 'Session', side_effect=contexts), \
+                patch.dict(publish.os.environ, {'GH_TOKEN': 'test-only'}), \
+                patch.object(publish.time, 'sleep') as sleep, \
+                patch.object(publish, 'published', return_value=True) as readback:
+            publish.main(force=True)
+        github.post.assert_called_once()
+        self.assertEqual(sleep.call_count, 2)
+        readback.assert_called_once_with(public, self.previous)
+
 
 if __name__ == '__main__':
     unittest.main()

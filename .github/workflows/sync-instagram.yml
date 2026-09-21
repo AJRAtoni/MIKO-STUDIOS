@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
+    inputs:
+      force_publish:
+        description: 'Rebuild and verify the public site even if the gallery is unchanged'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -69,4 +74,5 @@ jobs:
         if: ${{ success() && steps.sync.outcome == 'success' }}
         env:
           GH_TOKEN: ${{ github.token }}
+          FORCE_PUBLISH: ${{ inputs.force_publish }}
         run: python3 publish_instagram.py

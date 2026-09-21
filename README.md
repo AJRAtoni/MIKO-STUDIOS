@@ -93,9 +93,13 @@ it. A mismatched key fails rather than silently discarding the existing state.
 
 `publish_instagram.py` compares the public JSON and checks every image. If the
 public result differs, it requests an explicit GitHub Pages build and waits for
-the public gallery to match. This avoids relying on a bot commit to trigger
+the build to finish and the public gallery to match. This avoids relying on a bot commit to trigger
 Pages. A failed publication is checked again on the next run, even if no new
 Instagram post appeared. The last valid gallery remains available.
+
+For an end-to-end publication check or manual repair, select `force_publish`
+when running the workflow manually. It rebuilds and verifies the existing site
+without changing the gallery content. Normal scheduled runs publish only when needed.
 
 Only the gallery files and encrypted state are included in automated commits.
 Existing site content and unrelated local files are preserved. Concurrent syncs

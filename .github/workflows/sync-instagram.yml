@@ -1,47 +1,72 @@
 name: Sync Instagram Feed
 
 on:
-  push:
-    branches: [main]
   schedule:
-    - cron: '0 8 * * *'
+    - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
 
 permissions:
   contents: write
+  pages: write
+
+concurrency:
+  group: miko-instagram-sync
+  cancel-in-progress: false
 
 jobs:
   sync:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-
+    timeout-minutes: 15
     steps:
-      - name: Checkout repository
+      - name: Checkout main
         uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: 'pip'
+          cache: pip
 
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Sync Instagram feed
+      - name: Verify sync behavior
+        run: python3 -m unittest discover -s tests -v
+
+      - name: Sync official Instagram feed
+        id: sync
         env:
-          INSTAGRAM_SESSION_ID: ${{ secrets.INSTAGRAM_SESSION_ID }}
+          INSTAGRAM_ACCESS_TOKEN: ${{ secrets.INSTAGRAM_ACCESS_TOKEN }}
+          INSTAGRAM_TOKEN_KEY: ${{ secrets.INSTAGRAM_TOKEN_KEY }}
         run: python3 sync_instagram.py
 
-      - name: Commit and push changes
+      - name: Save feed and encrypted renewal
+        if: ${{ always() && steps.sync.outcome != 'skipped' }}
         run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add data/
-          if git diff --staged --quiet; then
-            echo "No hay cambios nuevos en el feed de Instagram."
-          else
-            git commit -m "chore: sync Instagram feed $(date -u +'%Y-%m-%d %H:%M UTC' )"
-            git push
-            echo "Feed de Instagram actualizado y publicado."
+          set -euo pipefail
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add -- data/instagram.json data/ig_images/
+          if [ -f .github/instagram-token.json ]; then
+            git add -- .github/instagram-token.json
           fi
+          if ! git diff --staged --quiet; then
+            git commit -m 'Sync Instagram gallery and encrypted access state'
+            for attempt in 1 2 3; do
+              git pull --rebase origin main
+              if git push origin HEAD:main; then
+                exit 0
+              fi
+            done
+            echo 'Could not save sync state; manual review required.' >&2
+            exit 1
+          fi
+
+      - name: Publish and verify public gallery
+        if: ${{ success() && steps.sync.outcome == 'success' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: python3 publish_instagram.py

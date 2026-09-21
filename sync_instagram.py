@@ -1,285 +1,268 @@
 #!/usr/bin/env python3
-"""
-sync_instagram.py — Miko Studios Instagram Feed Sync
-
-Descarga los últimos 9 posts del perfil de Instagram de Miko Studios
-y los cachea localmente (imágenes + JSON) para servir el feed sin
-exponer tokens en el frontend.
-
-Usa requests directos a la API web de Instagram con cookie de sesión,
-evitando dependencias de scraping como instaloader que son bloqueadas
-desde IPs de centros de datos.
-
-Uso local:
-    python3 sync_instagram.py
-
-Uso en CI/CD (GitHub Actions):
-    Requiere el secreto INSTAGRAM_SESSION_ID con el valor de la cookie
-    "sessionid" de una sesión activa de Instagram.
-"""
-
-import os
-import sys
+"""Cache Miko's latest nine posts using the official Instagram Login API."""
+import io
 import json
-import time
 import logging
-import hashlib
+import os
+from pathlib import Path
+import re
+import sys
+import tempfile
+import time
+from datetime import datetime
+from urllib.parse import urlparse
 
+from cryptography.fernet import Fernet, InvalidToken
+from PIL import Image
 import requests
 
-# Configurar logging
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    datefmt="%Y-%m-%d %H:%M:%S",
-)
+ROOT = Path(__file__).resolve().parent
+PROFILE = "mikostudios.co"
+API_VERSION = "v26.0"
+MAX_POSTS = 9
+DAY = 86400
 logger = logging.getLogger(__name__)
 
-# Constantes
-PROFILE = "mikostudios.co"
-MAX_POSTS = 9
-SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(SCRIPT_DIR, "data")
-IMG_DIR = os.path.join(DATA_DIR, "ig_images")
-JSON_FILE = os.path.join(DATA_DIR, "instagram.json")
-MAX_RETRIES = 3
-RETRY_DELAY = 5
 
-# Headers que simulan un navegador real
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                  "AppleWebKit/537.36 (KHTML, like Gecko) "
-                  "Chrome/122.0.0.0 Safari/537.36",
-    "Accept": "*/*",
-    "Accept-Language": "en-US,en;q=0.9",
-    "X-IG-App-ID": "936619743392459",
-    "X-Requested-With": "XMLHttpRequest",
-    "Referer": "https://www.instagram.com/",
-    "Origin": "https://www.instagram.com",
-}
+class SyncError(Exception):
+    """A safe, actionable error that contains no access tokens or signed URLs."""
 
 
-def ensure_directories():
-    """Crea los directorios necesarios si no existen."""
-    os.makedirs(IMG_DIR, exist_ok=True)
-    logger.info("Directorios verificados: %s", DATA_DIR)
+def session():
+    # Scheduled runs provide retries without urllib3 logging credential-bearing URLs.
+    return requests.Session()
 
 
-def create_session(session_id):
-    """Crea una sesión de requests con las cookies de Instagram."""
-    s = requests.Session()
-    s.headers.update(HEADERS)
-
-    if session_id:
-        s.cookies.set("sessionid", session_id, domain=".instagram.com")
-        s.cookies.set("ds_user_id", "", domain=".instagram.com")
-        logger.info("Cookie de sesión configurada.")
-    else:
-        logger.warning("Sin cookie de sesión. Las peticiones pueden ser limitadas.")
-
-    return s
+def publication_date(post):
+    value = post["timestamp"].replace("Z", "+00:00")
+    value = re.sub(r"([+-]\d{2})(\d{2})$", r"\1:\2", value)
+    date = datetime.fromisoformat(value)
+    if date.tzinfo is None:
+        raise ValueError("Missing timezone")
+    return date
 
 
-def get_user_id(session, username):
-    """Obtiene el user ID de Instagram a partir del username."""
-    url = f"https://www.instagram.com/api/v1/users/web_profile_info/?username={username}"
+def atomic_json(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    content = json.dumps(value, indent=2, ensure_ascii=False) + "\n"
+    if path.exists() and path.read_text() == content:
+        return False
+    temporary = path.with_suffix(path.suffix + ".tmp")
+    temporary.write_text(content, encoding="utf-8")
+    temporary.replace(path)
+    return True
 
-    for attempt in range(1, MAX_RETRIES + 1):
+
+class Instagram:
+    def __init__(self, client):
+        self.client = client
+
+    def get(self, route, token, **params):
+        # Never log requests exceptions: refresh URLs contain credentials.
         try:
-            resp = session.get(url, timeout=30)
-            if resp.status_code == 200:
-                data = resp.json()
-                user = data.get("data", {}).get("user", {})
-                user_id = user.get("id")
-                if user_id:
-                    logger.info("User ID obtenido: %s", user_id)
-                    return user_id, user
-            elif resp.status_code == 429:
-                logger.warning("Rate limited (429). Intento %d/%d.", attempt, MAX_RETRIES)
-                time.sleep(RETRY_DELAY * attempt)
-            else:
-                logger.warning("HTTP %d en intento %d/%d.", resp.status_code, attempt, MAX_RETRIES)
-                time.sleep(RETRY_DELAY)
-        except requests.RequestException as e:
-            logger.warning("Error en intento %d/%d: %s", attempt, MAX_RETRIES, e)
-            time.sleep(RETRY_DELAY)
+            response = self.client.get(
+                f"https://graph.instagram.com/{route}",
+                params=params,
+                headers={"Authorization": f"Bearer {token}"},
+                timeout=(10, 45),
+                allow_redirects=False,
+            )
+            data = response.json()
+        except (requests.RequestException, ValueError):
+            raise SyncError("Instagram no respondió correctamente; se conserva la galería.") from None
+        if not isinstance(data, dict):
+            raise SyncError("Instagram devolvió una respuesta no válida.")
+        if response.status_code != 200 or "error" in data:
+            code = data.get("error", {}).get("code", "unknown") if isinstance(data, dict) else "unknown"
+            raise SyncError(f"Instagram rechazó la consulta (HTTP {response.status_code}, código {code}). Revisar acceso y permisos.")
+        return data
 
-    return None, None
+    def account(self, token):
+        result = self.get(f"{API_VERSION}/me", token, fields="user_id,username")
+        account = result.get("data", [result])
+        account = account[0] if isinstance(account, list) and account else account
+        if not isinstance(account, dict) or account.get("username", "").lower() != PROFILE:
+            raise SyncError(f"El acceso no corresponde a @{PROFILE}; no se modifica la galería.")
+        user_id = str(account.get("user_id", account.get("id", "")))
+        if not user_id.isdigit():
+            raise SyncError("Instagram no devolvió un identificador válido para Miko.")
+        return user_id
 
+    def refresh(self, token):
+        result = self.get("refresh_access_token", token, grant_type="ig_refresh_token", access_token=token)
+        if not result.get("access_token") or not isinstance(result.get("expires_in"), int) or result["expires_in"] <= DAY:
+            raise SyncError("Instagram no devolvió una renovación válida.")
+        return result
 
-def get_posts_from_profile(user_data):
-    """Extrae los posts del perfil directamente de los datos del usuario."""
-    edges = (
-        user_data
-        .get("edge_owner_to_timeline_media", {})
-        .get("edges", [])
-    )
-
-    posts = []
-    for edge in edges[:MAX_POSTS]:
-        node = edge.get("node", {})
-        shortcode = node.get("shortcode", "")
-        display_url = node.get("display_url", "")
-
-        if shortcode and display_url:
-            posts.append({
-                "shortcode": shortcode,
-                "display_url": display_url,
-                "permalink": f"https://www.instagram.com/p/{shortcode}/",
-            })
-
-    return posts
-
-
-def get_posts_via_api(session, user_id):
-    """Obtiene posts usando el endpoint de la API de Instagram."""
-    url = f"https://www.instagram.com/api/v1/feed/user/{user_id}/?count={MAX_POSTS}"
-
-    for attempt in range(1, MAX_RETRIES + 1):
-        try:
-            resp = session.get(url, timeout=30)
-            if resp.status_code == 200:
-                data = resp.json()
-                items = data.get("items", [])
-                posts = []
-                for item in items[:MAX_POSTS]:
-                    shortcode = item.get("code", "")
-                    # Obtener la URL de la imagen
-                    candidates = (
-                        item.get("image_versions2", {})
-                        .get("candidates", [])
-                    )
-                    display_url = candidates[0]["url"] if candidates else ""
-
-                    if shortcode and display_url:
-                        posts.append({
-                            "shortcode": shortcode,
-                            "display_url": display_url,
-                            "permalink": f"https://www.instagram.com/p/{shortcode}/",
-                        })
-                return posts
-            elif resp.status_code == 429:
-                logger.warning("Rate limited en feed API (429). Intento %d/%d.", attempt, MAX_RETRIES)
-                time.sleep(RETRY_DELAY * attempt)
-            else:
-                logger.warning("HTTP %d en feed API, intento %d/%d.", resp.status_code, attempt, MAX_RETRIES)
-                time.sleep(RETRY_DELAY)
-        except requests.RequestException as e:
-            logger.warning("Error en feed API, intento %d/%d: %s", attempt, MAX_RETRIES, e)
-            time.sleep(RETRY_DELAY)
-
-    return None
-
-
-def download_image(session, url, filepath):
-    """Descarga una imagen con reintentos."""
-    for attempt in range(1, MAX_RETRIES + 1):
-        try:
-            resp = session.get(url, timeout=30)
-            resp.raise_for_status()
-            with open(filepath, "wb") as f:
-                f.write(resp.content)
-            logger.info("  Imagen descargada: %s", os.path.basename(filepath))
-            return True
-        except requests.RequestException as e:
-            logger.warning("  Intento %d/%d fallido: %s", attempt, MAX_RETRIES, e)
-            if attempt < MAX_RETRIES:
-                time.sleep(RETRY_DELAY)
-    return False
-
-
-def cleanup_old_images(current_shortcodes):
-    """Elimina imágenes de posts que ya no están en los últimos 9."""
-    if not os.path.exists(IMG_DIR):
-        return
-    current_files = {f"{sc}.jpg" for sc in current_shortcodes}
-    for filename in os.listdir(IMG_DIR):
-        if filename.endswith(".jpg") and filename not in current_files:
-            os.remove(os.path.join(IMG_DIR, filename))
-            logger.info("  Imagen antigua eliminada: %s", filename)
-
-
-def sync_instagram():
-    """Función principal de sincronización."""
-    ensure_directories()
-
-    session_id = os.environ.get("INSTAGRAM_SESSION_ID", "").strip()
-    if not session_id:
-        logger.error(
-            "INSTAGRAM_SESSION_ID no está configurado. "
-            "Configúralo como variable de entorno o secreto de GitHub."
-        )
-        sys.exit(1)
-
-    session = create_session(session_id)
-
-    logger.info("Obteniendo perfil de @%s...", PROFILE)
-
-    # Método 1: Obtener datos del perfil (incluye los últimos posts)
-    user_id, user_data = get_user_id(session, PROFILE)
-
-    if not user_id:
-        logger.error("No se pudo obtener el perfil. Verifica la cookie de sesión.")
-        sys.exit(1)
-
-    # Intentar extraer posts de los datos del perfil
-    posts = get_posts_from_profile(user_data) if user_data else []
-
-    # Método 2: Si no hay suficientes posts, usar la API de feed
-    if len(posts) < MAX_POSTS:
-        logger.info("Intentando API de feed para obtener más posts...")
-        api_posts = get_posts_via_api(session, user_id)
-        if api_posts:
-            posts = api_posts
-
-    if not posts:
-        logger.error("No se obtuvieron posts. Abortando sin modificar datos existentes.")
-        sys.exit(1)
-
-    logger.info("Se encontraron %d posts.", len(posts))
-
-    # Descargar imágenes y construir JSON
-    posts_data = []
-    shortcodes = []
-
-    for i, post in enumerate(posts[:MAX_POSTS]):
-        shortcode = post["shortcode"]
-        img_path = os.path.join(IMG_DIR, f"{shortcode}.jpg")
-
-        logger.info("Procesando post %d/%d: %s", i + 1, min(len(posts), MAX_POSTS), shortcode)
-
-        if not os.path.exists(img_path):
-            success = download_image(session, post["display_url"], img_path)
-            if not success:
-                logger.warning("  Omitiendo post %s (imagen no descargada).", shortcode)
-                continue
+    def posts(self, token, user_id):
+        fields = "id,media_type,media_url,thumbnail_url,permalink,timestamp,children{media_type,media_url,thumbnail_url}"
+        media, after = {}, None
+        # Read all pages so pinned items or API ordering cannot hide newer posts.
+        for _ in range(20):
+            params = {"fields": fields, "limit": 100}
+            if after:
+                params["after"] = after
+            result = self.get(f"{API_VERSION}/{user_id}/media", token, **params)
+            items = result.get("data")
+            if not isinstance(items, list):
+                raise SyncError("La respuesta de publicaciones no es válida.")
+            for item in items:
+                if not isinstance(item, dict) or not item.get("id") or not item.get("timestamp"):
+                    raise SyncError("Una publicación no contiene identificador y fecha válidos.")
+                media[item["id"]] = item
+            paging = result.get("paging", {})
+            if not paging.get("next"):
+                break
+            next_cursor = paging.get("cursors", {}).get("after")
+            if not next_cursor or next_cursor == after:
+                raise SyncError("Instagram no permite continuar la paginación de forma fiable.")
+            after = next_cursor
         else:
-            logger.info("  Imagen ya cacheada: %s.jpg", shortcode)
+            raise SyncError("Se alcanzó el límite de paginación; no se publica una selección incompleta.")
+        if not media:
+            raise SyncError("Instagram devolvió una galería vacía; se conserva la anterior.")
+        try:
+            return sorted(media.values(), key=publication_date, reverse=True)[:MAX_POSTS]
+        except (ValueError, TypeError):
+            raise SyncError("Instagram devolvió fechas incompatibles; se conserva la galería.") from None
 
-        posts_data.append({
-            "permalink": post["permalink"],
-            "media_url": f"./data/ig_images/{shortcode}.jpg",
-        })
-        shortcodes.append(shortcode)
 
-        # Pequeña pausa entre descargas
-        if i < len(posts) - 1:
-            time.sleep(1)
+def credentials(root, api, env):
+    """Persist refreshed tokens as authenticated ciphertext, never public plaintext."""
+    key = env.get("INSTAGRAM_TOKEN_KEY", "").strip()
+    try:
+        cipher = Fernet(key.encode())
+    except (ValueError, TypeError):
+        raise SyncError("Falta un secreto INSTAGRAM_TOKEN_KEY válido.") from None
+    path = root / ".github/instagram-token.json"
+    now = int(time.time())
+    if path.exists():
+        try:
+            state = json.loads(path.read_text())
+            if state["version"] != 1 or state["username"] != PROFILE:
+                raise ValueError()
+            token = cipher.decrypt(state["token"].encode()).decode()
+            refresh_at = int(state["refresh_at"])
+        except (InvalidToken, ValueError, KeyError, TypeError):
+            raise SyncError("No se puede abrir el acceso cifrado. Revisar INSTAGRAM_TOKEN_KEY; no se reemplaza automáticamente.") from None
+    else:
+        token = env.get("INSTAGRAM_ACCESS_TOKEN", "").strip()
+        if not token:
+            raise SyncError("Falta INSTAGRAM_ACCESS_TOKEN para la primera conexión.")
+        # Bootstrap must use a freshly generated, long-lived App Dashboard token.
+        # Meta only refreshes tokens older than 24 hours.
+        state = {"version": 1, "username": PROFILE, "token": cipher.encrypt(token.encode()).decode(), "refresh_at": now + DAY + 3600}
+        refresh_at = state["refresh_at"]
+    user_id = api.account(token)
+    if now >= refresh_at:
+        result = api.refresh(token)
+        token = result["access_token"]
+        state.update(token=cipher.encrypt(token.encode()).decode(),
+                     refresh_at=now + min(30 * DAY, result["expires_in"] // 2),
+                     expires_at=now + result["expires_in"])
+    # Save a rotated token even if subsequent media retrieval fails.
+    # CI commits this encrypted file even when the sync step fails.
+    atomic_json(path, state)
+    return token, user_id
 
-    if not posts_data:
-        logger.error("No se procesaron posts. Abortando sin modificar datos existentes.")
-        sys.exit(1)
 
-    # Limpiar imágenes antiguas
-    cleanup_old_images(shortcodes)
+def permalink(value):
+    url = urlparse(value or "")
+    match = re.fullmatch(r"/(?:mikostudios\.co/)?(p|reel)/([A-Za-z0-9_-]+)/?", url.path)
+    if url.scheme != "https" or url.hostname not in {"instagram.com", "www.instagram.com"} or not match:
+        raise SyncError("Instagram devolvió un enlace de publicación no válido.")
+    kind, code = match.groups()
+    return f"https://www.instagram.com/{kind}/{code}/", code
 
-    # Guardar JSON
-    with open(JSON_FILE, "w", encoding="utf-8") as f:
-        json.dump(posts_data, f, indent=2, ensure_ascii=False)
 
-    logger.info("Sincronización completada: %d posts guardados.", len(posts_data))
-    return 0
+def image_url(post):
+    kind = post.get("media_type")
+    url = post.get("thumbnail_url") if kind == "VIDEO" else post.get("media_url")
+    if not url and kind == "CAROUSEL_ALBUM":
+        children = post.get("children", {}).get("data", [])
+        if children:
+            return image_url(children[0])
+    parsed = urlparse(url or "")
+    host = parsed.hostname or ""
+    if parsed.scheme != "https" or not any(host == domain or host.endswith("." + domain) for domain in ("cdninstagram.com", "fbcdn.net", "fbsbx.com")):
+        raise SyncError("Una publicación no tiene una imagen o miniatura disponible; se conserva la galería anterior.")
+    return url
+
+
+def image_extension(content):
+    try:
+        with Image.open(io.BytesIO(content)) as image:
+            extension = {"JPEG": ".jpg", "PNG": ".png", "WEBP": ".webp"}.get(image.format)
+            if not extension or min(image.size) < 100 or image.width * image.height > 36_000_000:
+                raise ValueError()
+            image.load()
+        return extension
+    except (OSError, ValueError, Image.DecompressionBombError):
+        raise SyncError("Una imagen está incompleta o no es válida; se conserva la galería anterior.") from None
+
+
+def download(client, url):
+    # This separate client has no Instagram Authorization header or cookies.
+    try:
+        with client.get(url, timeout=(10, 45), stream=True, allow_redirects=False) as response:
+            if response.status_code != 200 or not response.headers.get("Content-Type", "").startswith("image/"):
+                raise SyncError("No se pudo descargar una imagen de Instagram.")
+            chunks, size = [], 0
+            for chunk in response.iter_content(65536):
+                size += len(chunk)
+                if size > 20 * 1024 * 1024:
+                    raise SyncError("La imagen supera el límite de descarga.")
+                chunks.append(chunk)
+            return b"".join(chunks)
+    except requests.RequestException:
+        raise SyncError("Falló una descarga; se conserva la galería anterior.") from None
+
+
+def cache_feed(root, posts, image_client):
+    json_path = root / "data/instagram.json"
+    previous = json.loads(json_path.read_text()) if json_path.exists() else []
+    existing = {post["permalink"]: post["media_url"] for post in previous}
+    new_feed = []
+    images = root / "data/ig_images"
+    images.mkdir(parents=True, exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix="instagram-", dir=root / "data") as directory:
+        staged = []
+        for post in posts:
+            link, code = permalink(post.get("permalink"))
+            relative = existing.get(link)
+            cached = root / relative if relative else None
+            if cached and cached.is_file() and cached.resolve().parent == images.resolve():
+                image_extension(cached.read_bytes())
+            else:
+                content = download(image_client, image_url(post))
+                extension = image_extension(content)
+                relative = f"./data/ig_images/{code}{extension}"
+                temporary = Path(directory) / (code + extension)
+                temporary.write_bytes(content)
+                staged.append((temporary, root / relative))
+            new_feed.append({"permalink": link, "media_url": relative})
+        if not new_feed or len({p["permalink"] for p in new_feed}) != len(new_feed):
+            raise SyncError("La selección está vacía o contiene publicaciones duplicadas.")
+        # Existing images remain available until every new download is validated.
+        for temporary, destination in staged:
+            temporary.replace(destination)
+        return atomic_json(json_path, new_feed)
+
+
+def sync_instagram(root=ROOT, env=None):
+    api = Instagram(session())
+    token, user_id = credentials(root, api, os.environ if env is None else env)
+    posts = api.posts(token, user_id)
+    changed = cache_feed(root, posts, session())
+    logger.info("Galería %s: %s publicaciones de @%s.", "actualizada" if changed else "sin cambios", len(posts), PROFILE)
+    return changed
 
 
 if __name__ == "__main__":
-    sys.exit(sync_instagram())
+    logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")
+    try:
+        sync_instagram()
+    except (SyncError, OSError, ValueError) as error:
+        # Do not emit arbitrary exceptions, response bodies, or signed media URLs.
+        logger.error("%s", error if isinstance(error, SyncError) else "Error al leer o guardar los archivos de sincronización.")
+        sys.exit(1)

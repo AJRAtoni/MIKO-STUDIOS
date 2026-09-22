@@ -11,7 +11,7 @@ import requests
 
 ROOT = Path(__file__).resolve().parent
 SITE = "https://mikostudios.co/"
-REPOSITORY = "AJRAtoni/MIKO-STUDIOS"
+REPOSITORY = os.environ.get("GITHUB_REPOSITORY", "mikostudios-dev/MIKO-STUDIOS")
 
 
 def published(client, expected):
